@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>PaintX Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#080808;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+.wrap{width:100%;max-width:640px}
+h1{font-size:22px;font-weight:700;margin-bottom:6px}
+.sub{font-size:13px;color:rgba(255,255,255,.3);margin-bottom:32px}
+.card{background:#0f0f0f;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:24px;margin-bottom:16px}
+.card h2{font-size:13px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px}
+.row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+input,select{background:#1a1a1a;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-family:inherit;font-size:13px;padding:9px 12px;outline:none;flex:1;min-width:140px}
+input:focus,select:focus{border-color:rgba(255,255,255,.3)}
+input[type=password]{letter-spacing:.1em}
+button{background:#fff;color:#000;border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;padding:9px 18px;cursor:pointer;white-space:nowrap;transition:opacity .15s}
+button:hover{opacity:.85}
+button.danger{background:rgba(224,85,85,.15);color:#e05555;border:1px solid rgba(224,85,85,.3)}
+button.danger:hover{background:rgba(224,85,85,.25)}
+button.sec{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.12)}
+button.sec:hover{background:rgba(255,255,255,.14)}
+.key-out{font-family:monospace;font-size:18px;font-weight:700;letter-spacing:.15em;color:#fff;background:#1a1a1a;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}
+.key-out span{flex:1}
+.copy-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:6px;color:#fff;font-size:12px;font-family:inherit;padding:6px 14px;cursor:pointer;white-space:nowrap;transition:all .15s}
+.copy-btn:hover{background:rgba(255,255,255,.16)}
+.copy-btn.ok{color:#4ec9b0;border-color:rgba(78,201,176,.3)}
+.key-list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.key-row{display:flex;align-items:center;gap:10px;background:#111;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px 14px}
+.key-row code{font-family:monospace;font-size:13px;font-weight:600;letter-spacing:.1em;flex:1}
+.key-row .meta{font-size:11px;color:rgba(255,255,255,.3)}
+.msg{font-size:12px;padding:8px 12px;border-radius:6px;margin-top:8px}
+.msg.err{background:rgba(224,85,85,.1);border:1px solid rgba(224,85,85,.2);color:#e05555}
+.msg.ok{background:rgba(78,201,176,.08);border:1px solid rgba(78,201,176,.2);color:#4ec9b0}
+#loginWrap{display:block}
+#mainWrap{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>PaintX Admin</h1>
+  <p class="sub">Manage licence keys</p>
+
+  <!-- Login -->
+  <div id="loginWrap">
+    <div class="card">
+      <h2>Login</h2>
+      <div class="row">
+        <input type="password" id="pwInput" placeholder="Admin password" onkeydown="if(event.key==='Enter')login()"/>
+        <button onclick="login()">Login</button>
+      </div>
+      <div id="loginMsg"></div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div id="mainWrap">
+    <!-- Generate -->
+    <div class="card">
+      <h2>Generate Key</h2>
+      <div class="row">
+        <input type="text" id="genName" placeholder="User name (e.g. John)" value="User"/>
+        <select id="genPlan"><option value="Pro">Pro</option></select>
+        <button onclick="generateKey()">Generate</button>
+      </div>
+      <div id="genOut" style="display:none" class="key-out">
+        <span id="genKey"></span>
+        <button class="copy-btn" id="genCopy" onclick="copyGen()">Copy</button>
+      </div>
+      <div id="genMsg"></div>
+    </div>
+
+    <!-- Key list -->
+    <div class="card">
+      <h2>All Keys <button class="sec" onclick="loadKeys()" style="font-size:11px;padding:5px 12px;margin-left:8px">Refresh</button></h2>
+      <div class="key-list" id="keyList"><p style="font-size:13px;color:rgba(255,255,255,.3)">Loading...</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var pw = '';
+
+function login(){
+  pw = document.getElementById('pwInput').value;
+  fetch('/api/list',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})})
+  .then(r=>r.json()).then(d=>{
+    if(d.error){ document.getElementById('loginMsg').innerHTML='<div class="msg err">Wrong password</div>'; return; }
+    document.getElementById('loginWrap').style.display='none';
+    document.getElementById('mainWrap').style.display='block';
+    renderKeys(d.keys);
+  }).catch(()=>{ document.getElementById('loginMsg').innerHTML='<div class="msg err">Connection error</div>'; });
+}
+
+function generateKey(){
+  var name = document.getElementById('genName').value||'User';
+  var plan = document.getElementById('genPlan').value||'Pro';
+  fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw,name,plan})})
+  .then(r=>r.json()).then(d=>{
+    if(d.error){ document.getElementById('genMsg').innerHTML='<div class="msg err">'+d.error+'</div>'; return; }
+    document.getElementById('genKey').textContent = d.key;
+    document.getElementById('genOut').style.display='flex';
+    document.getElementById('genMsg').innerHTML='<div class="msg ok" style="margin-top:8px">Key generated and stored</div>';
+    loadKeys();
+  });
+}
+
+function copyGen(){
+  var key = document.getElementById('genKey').textContent;
+  navigator.clipboard.writeText(key).then(()=>{
+    var btn=document.getElementById('genCopy');
+    btn.textContent='Copied!';btn.classList.add('ok');
+    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('ok');},2000);
+  });
+}
+
+function loadKeys(){
+  fetch('/api/list',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})})
+  .then(r=>r.json()).then(d=>{ if(d.keys) renderKeys(d.keys); });
+}
+
+function renderKeys(keys){
+  var el = document.getElementById('keyList');
+  if(!keys||!keys.length){ el.innerHTML='<p style="font-size:13px;color:rgba(255,255,255,.3)">No keys yet</p>'; return; }
+  el.innerHTML = keys.map(function(k){
+    return '<div class="key-row">'+
+      '<code>'+k.key+'</code>'+
+      '<span class="meta">'+k.name+' · '+k.plan+'</span>'+
+      '<button class="danger" onclick="revokeKey(\''+k.key+'\')">Revoke</button>'+
+      '</div>';
+  }).join('');
+}
+
+function revokeKey(key){
+  if(!confirm('Revoke '+key+'?')) return;
+  fetch('/api/revoke',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw,key})})
+  .then(r=>r.json()).then(d=>{ if(d.ok) loadKeys(); });
+}
+</script>
+</body>
+</html>
