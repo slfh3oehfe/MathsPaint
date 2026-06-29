@@ -354,21 +354,9 @@ body{
       <div class="docs-section">
         <h2>Your Licence Key</h2>
         <p>PaintX uses a one-time lifetime licence key. You enter it once on first launch and it saves permanently — no logins, no subscriptions, no expiry.</p>
-        <div class="docs-card" id="keyRequestCard">
-          <h3 style="font-size:13px;color:rgba(255,255,255,.5);font-weight:500;margin-bottom:14px;letter-spacing:.05em;text-transform:uppercase">Get Your Key</h3>
-          <div style="display:flex;gap:8px;margin-bottom:10px">
-            <input type="text" id="keyReqName" placeholder="Your name" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-family:inherit;font-size:13px;padding:9px 12px;outline:none"/>
-          </div>
-          <button onclick="requestKey()" id="keyReqBtn" style="width:100%;background:#fff;color:#000;border:none;border-radius:8px;font-family:inherit;font-size:13.5px;font-weight:600;padding:10px;cursor:pointer;transition:opacity .15s">Generate My Key</button>
-          <div id="keyReqMsg" style="margin-top:10px"></div>
-        </div>
-        <div class="docs-card" id="keyResultCard" style="display:none">
-          <h3 style="font-size:13px;color:rgba(255,255,255,.5);font-weight:500;margin-bottom:10px;letter-spacing:.05em;text-transform:uppercase">Your Lifetime Key</h3>
-          <div style="display:flex;align-items:center;gap:10px">
-            <code id="generatedKey" style="font-family:monospace;font-size:18px;font-weight:700;color:#fff;letter-spacing:.15em;flex:1"></code>
-            <button onclick="copyGeneratedKey()" id="copyKeyBtn" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:rgba(255,255,255,.6);font-size:12px;font-family:inherit;padding:7px 14px;cursor:pointer;transition:all .15s;white-space:nowrap">Copy</button>
-          </div>
-          <p style="font-size:12px;color:rgba(255,255,255,.25);margin-top:10px">Save this key — you will need it to activate PaintX.</p>
+        <div class="docs-card">
+          <h3>How to get a key</h3>
+          <p>Keys are distributed manually by the admin. To get your licence key, contact the admin directly and they will generate one for you.</p>
         </div>
       </div>
       <hr class="docs-divider"/>
@@ -447,46 +435,7 @@ document.addEventListener('DOMContentLoaded', function(){
   <p id="lightboxCap" style="font-size:13px;color:rgba(255,255,255,.4)"></p>
 </div>
 
-<script>
-function requestKey(){
-  var name = document.getElementById('keyReqName').value.trim() || 'User';
-  var btn = document.getElementById('keyReqBtn');
-  var msg = document.getElementById('keyReqMsg');
-  btn.disabled = true; btn.style.opacity = '0.5';
-  msg.innerHTML = '<span style="font-size:12px;color:rgba(255,255,255,.3)">Generating...</span>';
-  fetch('https://paintx.vercel.app/api/generate', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({password:'PUBLIC', name:name, plan:'Pro'})
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(data){
-    btn.disabled = false; btn.style.opacity = '';
-    if(data.key){
-      document.getElementById('generatedKey').textContent = data.key;
-      document.getElementById('keyRequestCard').style.display = 'none';
-      document.getElementById('keyResultCard').style.display = 'block';
-    } else {
-      msg.innerHTML = '<span style="font-size:12px;color:#e05555">'+(data.error||'Something went wrong')+'</span>';
-    }
-  })
-  .catch(function(){
-    btn.disabled = false; btn.style.opacity = '';
-    msg.innerHTML = '<span style="font-size:12px;color:#e05555">Connection error. Please try again.</span>';
-  });
-}
 
-function copyGeneratedKey(){
-  var key = document.getElementById('generatedKey').textContent;
-  navigator.clipboard.writeText(key).then(function(){
-    var btn = document.getElementById('copyKeyBtn');
-    btn.textContent = 'Copied!';
-    btn.style.color = '#4ec9b0';
-    btn.style.borderColor = 'rgba(78,201,176,.3)';
-    setTimeout(function(){ btn.textContent='Copy'; btn.style.color=''; btn.style.borderColor=''; }, 2000);
-  });
-}
-</script>
 
 <script>
 const routes = {home:'/',howto:'/how-to-use',docs:'/documentation',pictures:'/pictures',key:'/get-a-key'};
