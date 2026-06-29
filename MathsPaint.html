@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Maths Paint</title>
+<meta property="og:title" content="Maths Paint"/>
+<meta property="og:description" content="Your all-in-one creative workspace. Draw, plot graphs and configure every detail."/>
+<meta property="og:image" content="/app.png"/>
+<meta property="og:url" content="/"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Maths Paint"/>
+<meta name="twitter:description" content="Your all-in-one creative workspace. Draw, plot graphs and configure every detail."/>
+<meta name="twitter:image" content="/app.png"/>
+<link rel="icon" type="image/png" href="app.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:rgb(10,10,10);
+  min-height:100vh;
+  color:#fff;
+  overflow-x:hidden;
+}
+
+/* ── PAGE SYSTEM ── */
+.page{
+  position:fixed;
+  inset:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  text-align:center;
+  padding:2rem 1.5rem;
+  pointer-events:none;
+  opacity:0;
+  transform:translateY(18px);
+  transition:opacity .35s cubic-bezier(.4,0,.2,1),transform .35s cubic-bezier(.4,0,.2,1);
+  will-change:transform,opacity;
+}
+.page.active{opacity:1;transform:translateY(0);pointer-events:all;position:relative}
+.page.exit{opacity:0;transform:translateY(-14px);pointer-events:none;position:fixed}
+
+/* ── HOME ── */
+.mascot{
+  width:120px;height:120px;object-fit:contain;
+  margin-bottom:28px;
+  filter:drop-shadow(0 16px 40px rgba(0,122,204,.35));
+  transition:transform .3s ease;
+  border-radius:24px;
+}
+.mascot:hover{transform:translateY(-6px) scale(1.05)}
+
+.app-name{
+  font-size:32px;font-weight:700;letter-spacing:-.5px;
+  margin-bottom:8px;
+}
+.app-sub{
+  font-size:14px;color:rgba(255,255,255,.4);
+  margin-bottom:32px;max-width:340px;line-height:1.6;
+}
+
+.btn-row{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:14px;flex-wrap:wrap;justify-content:center;
+}
+
+/* Download button */
+.btn,.icon-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:inherit;font-size:13.5px;font-weight:600;
+  border-radius:999px;cursor:pointer;
+  border:1px solid rgb(34,34,34);
+  text-decoration:none;white-space:nowrap;
+  transition:background .2s,color .2s,transform .1s;
+}
+.btn:active,.icon-btn:active{transform:scale(.95)}
+
+.btn-download{
+  gap:8px;padding:0 20px;height:44px;
+  color:rgba(255,255,255,.8);
+  background:rgb(23,23,23);
+  border-color:rgb(34,34,34);
+  font-size:13.5px;
+}
+.btn-download:hover{background:rgb(34,34,34);color:#fff}
+
+/* Icon group */
+.icon-group{
+  display:inline-flex;align-items:center;
+  background:rgb(18,18,18);
+  border:1px solid rgb(34,34,34);
+  border-radius:999px;overflow:hidden;
+  padding:4px;gap:2px;height:44px;
+}
+
+.icon-btn{
+  width:34px;height:34px;overflow:hidden;
+  color:rgba(255,255,255,.5);
+  background:transparent;border:none;
+  border-radius:999px;flex-shrink:0;
+  justify-content:flex-start;
+  transition:background .22s,color .22s,width .3s cubic-bezier(.4,0,.2,1),transform .1s;
+}
+.icon-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+
+.icon-btn[data-label="How to Use"]:hover  {width:114px}
+.icon-btn[data-label="Documentation"]:hover{width:138px}
+.icon-btn[data-label="Videos"]:hover       {width:86px}
+
+.icon-inner{
+  width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.btn-label{
+  font-size:12.5px;font-weight:600;white-space:nowrap;
+  opacity:0;transform:translateX(-6px);
+  transition:opacity .2s,transform .25s cubic-bezier(.4,0,.2,1);
+  padding-right:14px;
+}
+.icon-btn:hover .btn-label{opacity:1;transform:translateX(0)}
+
+.tagline{font-size:12px;color:rgba(255,255,255,.22)}
+
+/* ── INNER PAGES ── */
+.inner-scroll{
+  overflow-y:auto;max-height:100vh;width:100%;
+  display:flex;justify-content:center;
+  padding:3rem 1.5rem;
+}
+.docs-wrap{max-width:680px;width:100%;text-align:left}
+
+.docs-back{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:13px;font-weight:500;
+  color:rgba(255,255,255,.4);
+  background:none;border:none;cursor:pointer;
+  font-family:inherit;margin-bottom:44px;padding:0;
+  transition:color .15s;
+}
+.docs-back:hover{color:#fff}
+
+.docs-header{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:52px;
+}
+.docs-header img{width:48px;height:48px;object-fit:contain;border-radius:10px}
+.docs-header h1{font-size:28px;font-weight:700;letter-spacing:-.4px}
+
+.docs-section{margin-bottom:44px}
+.docs-section h2{
+  font-size:11.5px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:rgba(0,180,216,.85);
+  margin-bottom:16px;
+}
+.docs-section p{
+  font-size:14.5px;line-height:1.8;
+  color:rgba(255,255,255,.6);margin-bottom:12px;
+}
+
+.docs-card{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:20px 24px;
+  margin-bottom:10px;
+  transition:border-color .2s,background .2s;
+}
+.docs-card:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+.docs-card h3{font-size:14px;font-weight:600;margin-bottom:6px;color:rgba(255,255,255,.9)}
+.docs-card p{font-size:13.5px;color:rgba(255,255,255,.45);line-height:1.65;margin:0}
+
+.docs-divider{border:none;border-top:1px solid rgba(255,255,255,.06);margin:44px 0}
+
+/* Feature grid on docs */
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.feat-card{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;padding:16px 18px;
+  transition:border-color .2s,background .2s;
+}
+.feat-card:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
+.feat-card h3{font-size:13px;font-weight:600;margin-bottom:4px;color:rgba(255,255,255,.85)}
+.feat-card p{font-size:12.5px;color:rgba(255,255,255,.4);line-height:1.55;margin:0}
+.feat-card .feat-icon{font-size:20px;margin-bottom:8px}
+
+/* Videos grid */
+.video-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.video-frame{
+  border-radius:12px;overflow:hidden;
+  aspect-ratio:16/9;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+}
+.video-frame iframe{display:block;width:100%;height:100%}
+
+/* Step pills */
+.step{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:16px 0;border-bottom:1px solid rgba(255,255,255,.05);
+}
+.step:last-child{border-bottom:none}
+.step-num{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  background:rgba(0,122,204,.2);border:1px solid rgba(0,122,204,.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#48b5f5;
+}
+.step-info h3{font-size:14px;font-weight:600;margin-bottom:4px;color:rgba(255,255,255,.9)}
+.step-info p{font-size:13.5px;color:rgba(255,255,255,.45);line-height:1.6;margin:0}
+
+@media(max-width:560px){
+  .feat-grid,.video-grid{grid-template-columns:1fr}
+  .app-name{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HOME ══ -->
+<div class="page active" id="page-home">
+  <img class="mascot" src="app.png" alt="Maths Paint"/>
+
+  <div class="btn-row">
+    <a href="#" class="btn btn-download">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download
+    </a>
+
+    <div class="icon-group">
+      <button class="icon-btn" data-label="How to Use" onclick="navigate('howto')" aria-label="How to Use">
+        <span class="icon-inner">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </span>
+        <span class="btn-label">How to Use</span>
+      </button>
+
+      <button class="icon-btn" data-label="Documentation" onclick="navigate('docs')" aria-label="Documentation">
+        <span class="icon-inner">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </span>
+        <span class="btn-label">Documentation</span>
+      </button>
+
+      <button class="icon-btn" data-label="Videos" onclick="navigate('videos')" aria-label="Videos">
+        <span class="icon-inner">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        </span>
+        <span class="btn-label">Videos</span>
+      </button>
+    </div>
+  </div>
+
+  <p class="tagline">Windows · Lightweight · No subscriptions</p>
+</div>
+
+<!-- ══ HOW TO USE ══ -->
+<div class="page" id="page-howto">
+  <div class="inner-scroll">
+    <div class="docs-wrap">
+      <button class="docs-back" onclick="navigate('home')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <div class="docs-header">
+        <img src="app.png" alt="Maths Paint"/>
+        <h1>How to Use</h1>
+      </div>
+
+      <div class="docs-section">
+        <h2>Getting Started</h2>
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-info"><h3>Download</h3><p>Click the Download button on the home page. You'll get a single zip file containing everything you need.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-info"><h3>Extract</h3><p>Right click the zip and choose Extract All. Keep the folder structure intact — the icons folder must stay alongside the HTML file.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-info"><h3>Enter your licence key</h3><p>Open the app and enter your lifetime licence key. You only need to do this once — it saves automatically.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-info"><h3>Set up your profile</h3><p>Choose a display name and optional profile picture. You can change these anytime in Settings.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-info"><h3>Start creating</h3><p>You're all set. Jump into the Paint tab to draw or the Graph tab to start plotting.</p></div>
+        </div>
+      </div>
+
+      <hr class="docs-divider"/>
+
+      <div class="docs-section">
+        <h2>Paint Tab</h2>
+        <p>The paint canvas fills your entire window. Switch tools from the toolbar at the top.</p>
+        <div class="docs-card"><h3>Multiple canvases</h3><p>Open multiple canvases with the + button in the tab bar. Switch between them without losing your work.</p></div>
+        <div class="docs-card"><h3>Colour palette</h3><p>Click the palette icon next to the colour circle to open your saved swatches. Right-click a swatch to remove it.</p></div>
+        <div class="docs-card"><h3>Select tool</h3><p>Draw a selection, then drag to move it. Press Ctrl+C to copy, Delete to remove, Escape to commit.</p></div>
+      </div>
+
+      <hr class="docs-divider"/>
+
+      <div class="docs-section">
+        <h2>Graph Tab</h2>
+        <p>A 700×700 XY coordinate graph with zoom, pan and function plotting.</p>
+        <div class="docs-card"><h3>Function plotter</h3><p>Type any expression like x^2 or sin(x) into the f(x) bar and press Plot to draw the curve.</p></div>
+        <div class="docs-card"><h3>Point table</h3><p>Click the table icon in the graph toolbar to view, edit and add plotted points as a spreadsheet.</p></div>
+        <div class="docs-card"><h3>Snap to grid</h3><p>Toggle snap mode to lock new points to the nearest grid intersection.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DOCUMENTATION ══ -->
+<div class="page" id="page-docs">
+  <div class="inner-scroll">
+    <div class="docs-wrap">
+      <button class="docs-back" onclick="navigate('home')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <div class="docs-header">
+        <img src="app.png" alt="Maths Paint"/>
+        <h1>Documentation</h1>
+      </div>
+
+      <div class="docs-section">
+        <h2>Overview</h2>
+        <p>Maths Paint is a desktop application built with C# WinForms and WebView2. It is a creative workspace combining a full paint suite and a mathematical graph plotter.</p>
+      </div>
+
+      <hr class="docs-divider"/>
+
+      <div class="docs-section">
+        <h2>Features</h2>
+        <div class="feat-grid">
+          <div class="feat-card">
+            <div class="feat-icon">🖌️</div>
+            <h3>Paint Suite</h3>
+            <p>Draw, erase, line, circle, rect, select. Multiple canvases with undo/redo.</p>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon">📈</div>
+            <h3>Graph Plotter</h3>
+            <p>700×700 XY grid. Plot points, lines, labels, free draw and function curves.</p>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon">🎨</div>
+            <h3>Themes</h3>
+            <p>8 built-in colour themes plus custom accent colour. Themes update the entire UI instantly.</p>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon">🌐</div>
+            <h3>Bilingual</h3>
+            <p>Full English and Russian language support. Switch at any time from Settings.</p>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon">🖼️</div>
+            <h3>Backgrounds</h3>
+            <p>Set any image or GIF as the app background with adjustable opacity.</p>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon">📐</div>
+            <h3>Function Plotter</h3>
+            <p>Plot sin(x), cos(x), x^2, sqrt(x) and any custom expression.</p>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon">🔔</div>
+            <h3>Notifications</h3>
+            <p>Toast notifications for save, copy and graph actions.</p>
+          </div>
+          <div class="feat-card">
+            <div class="feat-icon">🗂️</div>
+            <h3>Colour Palette</h3>
+            <p>Save favourite colours as swatches for instant access while painting.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="docs-divider"/>
+
+      <div class="docs-section">
+        <h2>Keyboard Shortcuts</h2>
+        <div class="docs-card"><h3>Ctrl + C</h3><p>Copy canvas or copy selection (when select tool is active).</p></div>
+        <div class="docs-card"><h3>Ctrl + V</h3><p>Paste image from clipboard onto the canvas.</p></div>
+        <div class="docs-card"><h3>Delete / Backspace</h3><p>Delete active selection.</p></div>
+        <div class="docs-card"><h3>Escape</h3><p>Commit and deselect current selection.</p></div>
+        <div class="docs-card"><h3>Enter (in f(x) bar)</h3><p>Plot the typed function on the graph.</p></div>
+      </div>
+
+      <hr class="docs-divider"/>
+
+      <div class="docs-section">
+        <h2>FAQ</h2>
+        <div class="docs-card"><h3>Is Maths Paint free?</h3><p>Yes. A lifetime licence key gives you permanent access to all features with no subscription.</p></div>
+        <div class="docs-card"><h3>What are the system requirements?</h3><p>Windows 10 or later. WebView2 Runtime is required — most modern Windows installs already have it.</p></div>
+        <div class="docs-card"><h3>Where is my data stored?</h3><p>All settings, profile and session data are stored locally in your browser's localStorage inside the WebView2 component. Nothing is sent externally.</p></div>
+        <div class="docs-card"><h3>Can I use my own background image?</h3><p>Yes. Go to Settings → Appearance → App Background and paste an image URL or choose a file from your device.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VIDEOS ══ -->
+<div class="page" id="page-videos">
+  <div class="inner-scroll">
+    <div class="docs-wrap" style="max-width:780px">
+      <button class="docs-back" onclick="navigate('home')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <div class="docs-header">
+        <img src="app.png" alt="Maths Paint"/>
+        <h1>Videos</h1>
+      </div>
+      <p style="color:rgba(255,255,255,.35);font-size:13px;margin-bottom:36px;margin-top:-36px">Tutorials and updates — add your YouTube links below.</p>
+      <div class="video-grid">
+        <div class="video-frame">
+          <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 1" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-frame">
+          <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 2" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-frame">
+          <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 3" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-frame">
+          <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video 4" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const routes = {home:'/',howto:'/how-to-use',docs:'/documentation',videos:'/videos'};
+
+function navigate(pageId){
+  const current = document.querySelector('.page.active');
+  const next = document.getElementById('page-'+pageId);
+  if(!next || current===next) return;
+  current.classList.add('exit');
+  current.classList.remove('active');
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      next.classList.add('active');
+      window.scrollTo(0,0);
+    });
+  });
+  current.addEventListener('transitionend',()=>{
+    current.classList.remove('exit');
+  },{once:true});
+  history.pushState({page:pageId},'',routes[pageId]||'/');
+}
+
+window.addEventListener('popstate',e=>{
+  const page = e.state?.page||'home';
+  navigate(page);
+});
+</script>
+</body>
+</html>
