@@ -115,6 +115,7 @@ body{
 .icon-btn[data-label="How to Use"]:hover  {width:114px}
 .icon-btn[data-label="Documentation"]:hover{width:138px}
 .icon-btn[data-label="Videos"]:hover       {width:86px}
+.icon-btn[data-label="Get a Key"]:hover    {width:100px}
 
 .icon-inner{
   width:34px;height:34px;
@@ -254,6 +255,13 @@ body{
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
         </span>
         <span class="btn-label">Videos</span>
+      </button>
+
+      <button class="icon-btn" data-label="Get a Key" onclick="navigate('key')" aria-label="Get a Key">
+        <span class="icon-inner">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        </span>
+        <span class="btn-label">Get a Key</span>
       </button>
     </div>
   </div>
@@ -424,8 +432,89 @@ body{
   </div>
 </div>
 
+<!-- ══ KEY ══ -->
+<div class="page" id="page-key">
+  <div class="inner-scroll">
+    <div class="docs-wrap">
+      <button class="docs-back" onclick="navigate('home')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <div class="docs-header">
+        <img src="app.png" alt="Maths Paint"/>
+        <h1>Get a Key</h1>
+      </div>
+
+      <div class="docs-section">
+        <h2>Your Licence Key</h2>
+        <p>Maths Paint uses a one-time lifetime licence key. You enter it once on first launch and it saves permanently — no logins, no subscriptions, no expiry.</p>
+        <div class="docs-card" style="border-color:rgba(0,180,216,.25);background:rgba(0,180,216,.04)">
+          <h3 style="font-size:13px;color:rgba(255,255,255,.5);font-weight:500;margin-bottom:10px;letter-spacing:.05em;text-transform:uppercase">Your Lifetime Key</h3>
+          <div style="display:flex;align-items:center;gap:10px">
+            <code style="font-family:monospace;font-size:18px;font-weight:700;color:#fff;letter-spacing:.15em;flex:1">MNCO-FULL-LIFE-TIME</code>
+            <button onclick="copyKey()" id="copyKeyBtn" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:rgba(255,255,255,.6);font-size:12px;font-family:inherit;padding:7px 14px;cursor:pointer;transition:all .15s;white-space:nowrap">Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <hr class="docs-divider"/>
+
+      <div class="docs-section">
+        <h2>Why do we use a licence?</h2>
+        <p>We use a simple one-time key system for a few reasons:</p>
+        <div class="docs-card">
+          <h3>Control distribution</h3>
+          <p>The key lets us control who has access to the app without needing accounts, servers or a backend. One key, one download, done.</p>
+        </div>
+        <div class="docs-card">
+          <h3>No accounts needed</h3>
+          <p>There is no server storing your data. The key is verified locally — your name, settings, canvases and profile never leave your machine.</p>
+        </div>
+        <div class="docs-card">
+          <h3>Prevent mass redistribution</h3>
+          <p>Without a key system anyone could share the app freely and we would have no way to manage updates or support. The key keeps the user base intentional.</p>
+        </div>
+        <div class="docs-card">
+          <h3>It is lifetime — not a subscription</h3>
+          <p>You pay once (or receive the key) and it never expires. There are no renewals, no monthly fees and no features locked behind tiers.</p>
+        </div>
+      </div>
+
+      <hr class="docs-divider"/>
+
+      <div class="docs-section">
+        <h2>How to use your key</h2>
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-info"><h3>Open Maths Paint</h3><p>Launch the app for the first time. You will be greeted with the setup wizard.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-info"><h3>Enter your key</h3><p>Type or paste <strong style="color:#fff;font-family:monospace">MNCO-FULL-LIFE-TIME</strong> into the licence key field.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-info"><h3>Continue setup</h3><p>Set your display name and profile picture, then click Start. Your key is saved — you will never need to enter it again.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-const routes = {home:'/',howto:'/how-to-use',docs:'/documentation',videos:'/videos'};
+function copyKey(){
+  navigator.clipboard.writeText('MNCO-FULL-LIFE-TIME').then(function(){
+    var btn = document.getElementById('copyKeyBtn');
+    btn.textContent = 'Copied!';
+    btn.style.color = '#4ec9b0';
+    btn.style.borderColor = 'rgba(78,201,176,.3)';
+    setTimeout(function(){ btn.textContent='Copy'; btn.style.color=''; btn.style.borderColor=''; }, 2000);
+  });
+}
+</script>
+
+<script>
+const routes = {home:'/',howto:'/how-to-use',docs:'/documentation',videos:'/videos',key:'/get-a-key'};
 
 function navigate(pageId){
   const current = document.querySelector('.page.active');
