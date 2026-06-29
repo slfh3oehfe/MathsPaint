@@ -29,56 +29,33 @@ body{
   overflow-x:hidden;
 }
 
-/*  PAGE SYSTEM  */
 .page{
-  position:fixed;
-  inset:0;
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  text-align:center;
-  padding:2rem 1.5rem;
-  pointer-events:none;
-  opacity:0;
-  transform:translateY(18px);
+  position:fixed;inset:0;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;text-align:center;padding:2rem 1.5rem;
+  pointer-events:none;opacity:0;transform:translateY(18px);
   transition:opacity .35s cubic-bezier(.4,0,.2,1),transform .35s cubic-bezier(.4,0,.2,1);
   will-change:transform,opacity;
 }
 .page.active{opacity:1;transform:translateY(0);pointer-events:all;position:relative}
 .page.exit{opacity:0;transform:translateY(-14px);pointer-events:none;position:fixed}
 
-/*  HOME  */
 .mascot{
-  width:120px;height:120px;object-fit:contain;
-  margin-bottom:28px;
+  width:120px;height:120px;object-fit:contain;margin-bottom:28px;
   filter:drop-shadow(0 16px 40px rgba(0,122,204,.35));
-  transition:transform .3s ease;
-  border-radius:24px;
+  transition:transform .3s ease;border-radius:24px;
 }
 .mascot:hover{transform:translateY(-6px) scale(1.05)}
-
-.app-name{
-  font-size:32px;font-weight:700;letter-spacing:-.5px;
-  margin-bottom:8px;
-}
-.app-sub{
-  font-size:14px;color:rgba(255,255,255,.4);
-  margin-bottom:32px;max-width:340px;line-height:1.6;
-}
 
 .btn-row{
   display:flex;align-items:center;gap:8px;
   margin-bottom:14px;flex-wrap:wrap;justify-content:center;
 }
 
-/* Download button */
 .btn,.icon-btn{
   display:inline-flex;align-items:center;justify-content:center;
   font-family:inherit;font-size:13.5px;font-weight:600;
-  border-radius:999px;cursor:pointer;
-  border:1px solid rgb(34,34,34);
+  border-radius:999px;cursor:pointer;border:1px solid rgb(34,34,34);
   text-decoration:none;white-space:nowrap;
   transition:background .2s,color .2s,transform .1s;
 }
@@ -87,91 +64,66 @@ body{
 .btn-download{
   gap:8px;padding:0 20px;height:44px;
   color:rgba(255,255,255,.8);
-  background:rgb(23,23,23);
-  border-color:rgb(34,34,34);
-  font-size:13.5px;
+  background:rgb(23,23,23);border-color:rgb(34,34,34);font-size:13.5px;
 }
 .btn-download:hover{background:rgb(34,34,34);color:#fff}
 
-/* Icon group */
 .icon-group{
   display:inline-flex;align-items:center;
-  background:rgb(18,18,18);
-  border:1px solid rgb(34,34,34);
-  border-radius:999px;overflow:hidden;
-  padding:4px;gap:2px;height:44px;
+  background:rgb(18,18,18);border:1px solid rgb(34,34,34);
+  border-radius:999px;overflow:hidden;padding:4px;gap:2px;height:44px;
 }
 
 .icon-btn{
   width:34px;height:34px;overflow:hidden;
-  color:rgba(255,255,255,.5);
-  background:transparent;border:none;
-  border-radius:999px;flex-shrink:0;
-  justify-content:flex-start;
+  color:rgba(255,255,255,.5);background:transparent;border:none;
+  border-radius:999px;flex-shrink:0;justify-content:flex-start;
   transition:background .22s,color .22s,width .3s cubic-bezier(.4,0,.2,1),transform .1s;
 }
 .icon-btn:hover{background:rgba(255,255,255,.08);color:#fff}
-
 .icon-btn[data-label="How to Use"]:hover  {width:114px}
 .icon-btn[data-label="Documentation"]:hover{width:138px}
 .icon-btn[data-label="Videos"]:hover       {width:86px}
 .icon-btn[data-label="Get a Key"]:hover    {width:100px}
 
-.icon-inner{
-  width:34px;height:34px;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
+.icon-inner{width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .btn-label{
   font-size:12.5px;font-weight:600;white-space:nowrap;
   opacity:0;transform:translateX(-6px);
-  transition:opacity .2s,transform .25s cubic-bezier(.4,0,.2,1);
-  padding-right:14px;
+  transition:opacity .2s,transform .25s cubic-bezier(.4,0,.2,1);padding-right:14px;
 }
 .icon-btn:hover .btn-label{opacity:1;transform:translateX(0)}
 
 .tagline{font-size:12px;color:rgba(255,255,255,.22)}
 
-/*  INNER PAGES  */
 .inner-scroll{
   overflow-y:auto;max-height:100vh;width:100%;
-  display:flex;justify-content:center;
-  padding:3rem 1.5rem;
+  display:flex;justify-content:center;padding:3rem 1.5rem;
 }
 .docs-wrap{max-width:680px;width:100%;text-align:left}
 
 .docs-back{
   display:inline-flex;align-items:center;gap:6px;
-  font-size:13px;font-weight:500;
-  color:rgba(255,255,255,.4);
-  background:none;border:none;cursor:pointer;
-  font-family:inherit;margin-bottom:44px;padding:0;
-  transition:color .15s;
+  font-size:13px;font-weight:500;color:rgba(255,255,255,.4);
+  background:none;border:none;cursor:pointer;font-family:inherit;
+  margin-bottom:44px;padding:0;transition:color .15s;
 }
 .docs-back:hover{color:#fff}
 
-.docs-header{
-  display:flex;align-items:center;gap:16px;
-  margin-bottom:52px;
-}
+.docs-header{display:flex;align-items:center;gap:16px;margin-bottom:52px}
 .docs-header img{width:48px;height:48px;object-fit:contain;border-radius:10px}
 .docs-header h1{font-size:28px;font-weight:700;letter-spacing:-.4px}
 
 .docs-section{margin-bottom:44px}
 .docs-section h2{
   font-size:11.5px;font-weight:600;letter-spacing:.1em;
-  text-transform:uppercase;color:rgba(0,180,216,.85);
-  margin-bottom:16px;
+  text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:16px;
 }
-.docs-section p{
-  font-size:14.5px;line-height:1.8;
-  color:rgba(255,255,255,.6);margin-bottom:12px;
-}
+.docs-section p{font-size:14.5px;line-height:1.8;color:rgba(255,255,255,.6);margin-bottom:12px}
 
 .docs-card{
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:14px;padding:20px 24px;
-  margin-bottom:10px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;padding:20px 24px;margin-bottom:10px;
   transition:border-color .2s,background .2s;
 }
 .docs-card:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
@@ -180,29 +132,15 @@ body{
 
 .docs-divider{border:none;border-top:1px solid rgba(255,255,255,.06);margin:44px 0}
 
-/* Feature grid on docs */
 .feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .feat-card{
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:12px;padding:16px 18px;
-  transition:border-color .2s,background .2s;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;padding:16px 18px;transition:border-color .2s,background .2s;
 }
 .feat-card:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12)}
 .feat-card h3{font-size:13px;font-weight:600;margin-bottom:4px;color:rgba(255,255,255,.85)}
 .feat-card p{font-size:12.5px;color:rgba(255,255,255,.4);line-height:1.55;margin:0}
-.feat-card .feat-icon{font-size:20px;margin-bottom:8px}
 
-/* Videos grid */
-.video-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.video-frame{
-  border-radius:12px;overflow:hidden;
-  aspect-ratio:16/9;background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.07);
-}
-.video-frame iframe{display:block;width:100%;height:100%}
-
-/* Step pills */
 .step{
   display:flex;align-items:flex-start;gap:14px;
   padding:16px 0;border-bottom:1px solid rgba(255,255,255,.05);
@@ -210,22 +148,21 @@ body{
 .step:last-child{border-bottom:none}
 .step-num{
   width:28px;height:28px;border-radius:50%;flex-shrink:0;
-  background:rgba(0,122,204,.2);border:1px solid rgba(0,122,204,.4);
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
   display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:700;color:#48b5f5;
+  font-size:12px;font-weight:700;color:rgba(255,255,255,.4);
 }
 .step-info h3{font-size:14px;font-weight:600;margin-bottom:4px;color:rgba(255,255,255,.9)}
 .step-info p{font-size:13.5px;color:rgba(255,255,255,.45);line-height:1.6;margin:0}
 
 @media(max-width:560px){
-  .feat-grid,.video-grid{grid-template-columns:1fr}
+  .feat-grid{grid-template-columns:1fr}
   .app-name{font-size:26px}
 }
 </style>
 </head>
 <body>
 
-<!--  HOME  -->
 <div class="page active" id="page-home">
   <img class="mascot" src="app.png" alt="PaintX"/>
 
@@ -237,30 +174,19 @@ body{
 
     <div class="icon-group">
       <button class="icon-btn" data-label="How to Use" onclick="navigate('howto')" aria-label="How to Use">
-        <span class="icon-inner">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </span>
+        <span class="icon-inner"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
         <span class="btn-label">How to Use</span>
       </button>
-
       <button class="icon-btn" data-label="Documentation" onclick="navigate('docs')" aria-label="Documentation">
-        <span class="icon-inner">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        </span>
+        <span class="icon-inner"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
         <span class="btn-label">Documentation</span>
       </button>
-
       <button class="icon-btn" data-label="Videos" onclick="navigate('videos')" aria-label="Videos">
-        <span class="icon-inner">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-        </span>
+        <span class="icon-inner"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></span>
         <span class="btn-label">Videos</span>
       </button>
-
       <button class="icon-btn" data-label="Get a Key" onclick="navigate('key')" aria-label="Get a Key">
-        <span class="icon-inner">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-        </span>
+        <span class="icon-inner"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></span>
         <span class="btn-label">Get a Key</span>
       </button>
     </div>
@@ -269,7 +195,6 @@ body{
   <p class="tagline">Windows · Lightweight · No subscriptions</p>
 </div>
 
-<!--  HOW TO USE  -->
 <div class="page" id="page-howto">
   <div class="inner-scroll">
     <div class="docs-wrap">
@@ -281,33 +206,15 @@ body{
         <img src="app.png" alt="PaintX"/>
         <h1>How to Use</h1>
       </div>
-
       <div class="docs-section">
         <h2>Getting Started</h2>
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-info"><h3>Download</h3><p>Click the Download button on the home page. You'll get a single zip file containing everything you need.</p></div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-info"><h3>Extract</h3><p>Right click the zip and choose Extract All. Keep the folder structure intact — the icons folder must stay alongside the HTML file.</p></div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-info"><h3>Enter your licence key</h3><p>Open the app and enter your lifetime licence key. You only need to do this once — it saves automatically.</p></div>
-        </div>
-        <div class="step">
-          <div class="step-num">4</div>
-          <div class="step-info"><h3>Set up your profile</h3><p>Choose a display name and optional profile picture. You can change these anytime in Settings.</p></div>
-        </div>
-        <div class="step">
-          <div class="step-num">5</div>
-          <div class="step-info"><h3>Start creating</h3><p>You're all set. Jump into the Paint tab to draw or the Graph tab to start plotting.</p></div>
-        </div>
+        <div class="step"><div class="step-num">1</div><div class="step-info"><h3>Download</h3><p>Click the Download button on the home page. You'll get a single zip file containing everything you need.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-info"><h3>Extract</h3><p>Right click the zip and choose Extract All. Keep the folder structure intact — the icons folder must stay alongside the HTML file.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-info"><h3>Enter your licence key</h3><p>Open the app and enter your lifetime licence key. You only need to do this once — it saves automatically.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-info"><h3>Set up your profile</h3><p>Choose a display name and optional profile picture. You can change these anytime in Settings.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-info"><h3>Start creating</h3><p>You're all set. Jump into the Paint tab to draw or the Graph tab to start plotting.</p></div></div>
       </div>
-
       <hr class="docs-divider"/>
-
       <div class="docs-section">
         <h2>Paint Tab</h2>
         <p>The paint canvas fills your entire window. Switch tools from the toolbar at the top.</p>
@@ -315,9 +222,7 @@ body{
         <div class="docs-card"><h3>Colour palette</h3><p>Click the palette icon next to the colour circle to open your saved swatches. Right-click a swatch to remove it.</p></div>
         <div class="docs-card"><h3>Select tool</h3><p>Draw a selection, then drag to move it. Press Ctrl+C to copy, Delete to remove, Escape to commit.</p></div>
       </div>
-
       <hr class="docs-divider"/>
-
       <div class="docs-section">
         <h2>Graph Tab</h2>
         <p>A 700×700 XY coordinate graph with zoom, pan and function plotting.</p>
@@ -329,7 +234,6 @@ body{
   </div>
 </div>
 
-<!--  DOCUMENTATION  -->
 <div class="page" id="page-docs">
   <div class="inner-scroll">
     <div class="docs-wrap">
@@ -341,54 +245,25 @@ body{
         <img src="app.png" alt="PaintX"/>
         <h1>Documentation</h1>
       </div>
-
       <div class="docs-section">
         <h2>Overview</h2>
         <p>PaintX is a desktop application built with C# WinForms and WebView2. It is a creative workspace combining a full paint suite and a mathematical graph plotter.</p>
       </div>
-
       <hr class="docs-divider"/>
-
       <div class="docs-section">
         <h2>Features</h2>
         <div class="feat-grid">
-          <div class="feat-card">
-            <h3>Paint Suite</h3>
-            <p>Draw, erase, line, circle, rect, select. Multiple canvases with undo/redo.</p>
-          </div>
-          <div class="feat-card">
-            <h3>Graph Plotter</h3>
-            <p>700×700 XY grid. Plot points, lines, labels, free draw and function curves.</p>
-          </div>
-          <div class="feat-card">
-            <h3>Themes</h3>
-            <p>8 built-in colour themes plus custom accent colour. Themes update the entire UI instantly.</p>
-          </div>
-          <div class="feat-card">
-            <h3>Bilingual</h3>
-            <p>Full English and Russian language support. Switch at any time from Settings.</p>
-          </div>
-          <div class="feat-card">
-            <h3>Backgrounds</h3>
-            <p>Set any image or GIF as the app background with adjustable opacity.</p>
-          </div>
-          <div class="feat-card">
-            <h3>Function Plotter</h3>
-            <p>Plot sin(x), cos(x), x^2, sqrt(x) and any custom expression.</p>
-          </div>
-          <div class="feat-card">
-            <h3>Notifications</h3>
-            <p>Toast notifications for save, copy and graph actions.</p>
-          </div>
-          <div class="feat-card">
-            <h3>Colour Palette</h3>
-            <p>Save favourite colours as swatches for instant access while painting.</p>
-          </div>
+          <div class="feat-card"><h3>Paint Suite</h3><p>Draw, erase, line, circle, rect, select. Multiple canvases with undo/redo.</p></div>
+          <div class="feat-card"><h3>Graph Plotter</h3><p>700×700 XY grid. Plot points, lines, labels, free draw and function curves.</p></div>
+          <div class="feat-card"><h3>Themes</h3><p>8 built-in colour themes plus custom accent colour. Themes update the entire UI instantly.</p></div>
+          <div class="feat-card"><h3>Bilingual</h3><p>Full English and Russian language support. Switch at any time from Settings.</p></div>
+          <div class="feat-card"><h3>Backgrounds</h3><p>Set any image or GIF as the app background with adjustable opacity.</p></div>
+          <div class="feat-card"><h3>Function Plotter</h3><p>Plot sin(x), cos(x), x^2, sqrt(x) and any custom expression.</p></div>
+          <div class="feat-card"><h3>Notifications</h3><p>Toast notifications for save, copy and graph actions.</p></div>
+          <div class="feat-card"><h3>Colour Palette</h3><p>Save favourite colours as swatches for instant access while painting.</p></div>
         </div>
       </div>
-
       <hr class="docs-divider"/>
-
       <div class="docs-section">
         <h2>Keyboard Shortcuts</h2>
         <div class="docs-card"><h3>Ctrl + C</h3><p>Copy canvas or copy selection (when select tool is active).</p></div>
@@ -397,21 +272,18 @@ body{
         <div class="docs-card"><h3>Escape</h3><p>Commit and deselect current selection.</p></div>
         <div class="docs-card"><h3>Enter (in f(x) bar)</h3><p>Plot the typed function on the graph.</p></div>
       </div>
-
       <hr class="docs-divider"/>
-
       <div class="docs-section">
         <h2>FAQ</h2>
         <div class="docs-card"><h3>Is PaintX free?</h3><p>Yes. A lifetime licence key gives you permanent access to all features with no subscription.</p></div>
         <div class="docs-card"><h3>What are the system requirements?</h3><p>Windows 10 or later. WebView2 Runtime is required — most modern Windows installs already have it.</p></div>
-        <div class="docs-card"><h3>Where is my data stored?</h3><p>All settings, profile and session data are stored locally in your browser's localStorage inside the WebView2 component. Nothing is sent externally.</p></div>
+        <div class="docs-card"><h3>Where is my data stored?</h3><p>All settings, profile and session data are stored locally. Nothing is sent externally.</p></div>
         <div class="docs-card"><h3>Can I use my own background image?</h3><p>Yes. Go to Settings → Appearance → App Background and paste an image URL or choose a file from your device.</p></div>
       </div>
     </div>
   </div>
 </div>
 
-<!--  VIDEOS  -->
 <div class="page" id="page-videos">
   <div class="inner-scroll">
     <div class="docs-wrap" style="max-width:780px">
@@ -432,7 +304,6 @@ body{
   </div>
 </div>
 
-<!-- ══ KEY ══ -->
 <div class="page" id="page-key">
   <div class="inner-scroll">
     <div class="docs-wrap">
@@ -444,11 +315,10 @@ body{
         <img src="app.png" alt="PaintX"/>
         <h1>Get a Key</h1>
       </div>
-
       <div class="docs-section">
         <h2>Your Licence Key</h2>
         <p>PaintX uses a one-time lifetime licence key. You enter it once on first launch and it saves permanently — no logins, no subscriptions, no expiry.</p>
-        <div class="docs-card" style="border-color:rgba(0,180,216,.25);background:rgba(0,180,216,.04)">
+        <div class="docs-card">
           <h3 style="font-size:13px;color:rgba(255,255,255,.5);font-weight:500;margin-bottom:10px;letter-spacing:.05em;text-transform:uppercase">Your Lifetime Key</h3>
           <div style="display:flex;align-items:center;gap:10px">
             <code style="font-family:monospace;font-size:18px;font-weight:700;color:#fff;letter-spacing:.15em;flex:1">MNCO-FULL-LIFE-TIME</code>
@@ -456,46 +326,21 @@ body{
           </div>
         </div>
       </div>
-
       <hr class="docs-divider"/>
-
       <div class="docs-section">
         <h2>Why do we use a licence?</h2>
         <p>We use a simple one-time key system for a few reasons:</p>
-        <div class="docs-card">
-          <h3>Control distribution</h3>
-          <p>The key lets us control who has access to the app without needing accounts, servers or a backend. One key, one download, done.</p>
-        </div>
-        <div class="docs-card">
-          <h3>No accounts needed</h3>
-          <p>There is no server storing your data. The key is verified locally — your name, settings, canvases and profile never leave your machine.</p>
-        </div>
-        <div class="docs-card">
-          <h3>Prevent mass redistribution</h3>
-          <p>Without a key system anyone could share the app freely and we would have no way to manage updates or support. The key keeps the user base intentional.</p>
-        </div>
-        <div class="docs-card">
-          <h3>It is lifetime — not a subscription</h3>
-          <p>You pay once (or receive the key) and it never expires. There are no renewals, no monthly fees and no features locked behind tiers.</p>
-        </div>
+        <div class="docs-card"><h3>Control distribution</h3><p>The key lets us control who has access to the app without needing accounts, servers or a backend. One key, one download, done.</p></div>
+        <div class="docs-card"><h3>No accounts needed</h3><p>There is no server storing your data. The key is verified locally — your name, settings, canvases and profile never leave your machine.</p></div>
+        <div class="docs-card"><h3>Prevent mass redistribution</h3><p>Without a key system anyone could share the app freely and we would have no way to manage updates or support. The key keeps the user base intentional.</p></div>
+        <div class="docs-card"><h3>It is lifetime — not a subscription</h3><p>You pay once (or receive the key) and it never expires. There are no renewals, no monthly fees and no features locked behind tiers.</p></div>
       </div>
-
       <hr class="docs-divider"/>
-
       <div class="docs-section">
         <h2>How to use your key</h2>
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-info"><h3>Open PaintX</h3><p>Launch the app for the first time. You will be greeted with the setup wizard.</p></div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-info"><h3>Enter your key</h3><p>Type or paste <strong style="color:#fff;font-family:monospace">MNCO-FULL-LIFE-TIME</strong> into the licence key field.</p></div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-info"><h3>Continue setup</h3><p>Set your display name and profile picture, then click Start. Your key is saved — you will never need to enter it again.</p></div>
-        </div>
+        <div class="step"><div class="step-num">1</div><div class="step-info"><h3>Open PaintX</h3><p>Launch the app for the first time. You will be greeted with the setup wizard.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-info"><h3>Enter your key</h3><p>Type or paste <strong style="color:#fff;font-family:monospace">MNCO-FULL-LIFE-TIME</strong> into the licence key field.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-info"><h3>Continue setup</h3><p>Set your display name and profile picture, then click Start. Your key is saved — you will never need to enter it again.</p></div></div>
       </div>
     </div>
   </div>
@@ -515,29 +360,16 @@ function copyKey(){
 
 <script>
 const routes = {home:'/',howto:'/how-to-use',docs:'/documentation',videos:'/videos',key:'/get-a-key'};
-
 function navigate(pageId){
   const current = document.querySelector('.page.active');
   const next = document.getElementById('page-'+pageId);
-  if(!next || current===next) return;
-  current.classList.add('exit');
-  current.classList.remove('active');
-  requestAnimationFrame(()=>{
-    requestAnimationFrame(()=>{
-      next.classList.add('active');
-      window.scrollTo(0,0);
-    });
-  });
-  current.addEventListener('transitionend',()=>{
-    current.classList.remove('exit');
-  },{once:true});
+  if(!next||current===next) return;
+  current.classList.add('exit'); current.classList.remove('active');
+  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ next.classList.add('active'); window.scrollTo(0,0); }); });
+  current.addEventListener('transitionend',()=>{ current.classList.remove('exit'); },{once:true});
   history.pushState({page:pageId},'',routes[pageId]||'/');
 }
-
-window.addEventListener('popstate',e=>{
-  const page = e.state?.page||'home';
-  navigate(page);
-});
+window.addEventListener('popstate',e=>{ const page=e.state?.page||'home'; navigate(page); });
 </script>
 </body>
 </html>
