@@ -83,7 +83,7 @@ body{
 .icon-btn:hover{background:rgba(255,255,255,.08);color:#fff}
 .icon-btn[data-label="How to Use"]:hover  {width:114px}
 .icon-btn[data-label="Documentation"]:hover{width:138px}
-.icon-btn[data-label="Videos"]:hover       {width:86px}
+.icon-btn[data-label="Pictures"]:hover       {width:86px}
 .icon-btn[data-label="Get a Key"]:hover    {width:100px}
 
 .icon-inner{width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -133,6 +133,16 @@ body{
 .docs-divider{border:none;border-top:1px solid rgba(255,255,255,.06);margin:44px 0}
 
 .feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pic-card{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;overflow:hidden;
+  transition:border-color .2s,transform .2s;
+  cursor:pointer;
+}
+.pic-card:hover{border-color:rgba(255,255,255,.18);transform:translateY(-2px)}
+.pic-card img{width:100%;display:block;aspect-ratio:16/9;object-fit:cover;background:#111}
+.pic-card p{font-size:12px;color:rgba(255,255,255,.35);padding:10px 14px;font-weight:500}
 .feat-card{
   background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
   border-radius:12px;padding:16px 18px;transition:border-color .2s,background .2s;
@@ -163,7 +173,7 @@ body{
 </head>
 <body>
 
-<canvas id="snowCanvas" style="position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.6"></canvas>
+<canvas id="bgCanvas" style="position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.6"></canvas>
 
 <div class="page active" id="page-home">
   <img class="mascot" src="app.png" alt="PaintX"/>
@@ -183,9 +193,9 @@ body{
         <span class="icon-inner"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
         <span class="btn-label">Documentation</span>
       </button>
-      <button class="icon-btn" data-label="Videos" onclick="navigate('videos')" aria-label="Videos">
+      <button class="icon-btn" data-label="Pictures" onclick="navigate('pictures')" aria-label="Pictures">
         <span class="icon-inner"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></span>
-        <span class="btn-label">Videos</span>
+        <span class="btn-label">Pictures</span>
       </button>
       <button class="icon-btn" data-label="Get a Key" onclick="navigate('key')" aria-label="Get a Key">
         <span class="icon-inner"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></span>
@@ -286,21 +296,34 @@ body{
   </div>
 </div>
 
-<div class="page" id="page-videos">
+<div class="page" id="page-pictures">
   <div class="inner-scroll">
-    <div class="docs-wrap" style="max-width:780px">
+    <div class="docs-wrap" style="max-width:860px">
       <button class="docs-back" onclick="navigate('home')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         Back
       </button>
       <div class="docs-header">
         <img src="app.png" alt="PaintX"/>
-        <h1>Videos</h1>
+        <h1>Pictures</h1>
       </div>
-      <div style="margin-top:60px;display:flex;flex-direction:column;align-items:center;gap:12px;color:rgba(255,255,255,.25)">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-        <p style="font-size:14px;font-weight:500;color:rgba(255,255,255,.3)">No videos yet</p>
-        <p style="font-size:12.5px;color:rgba(255,255,255,.18);max-width:260px;line-height:1.6;text-align:center">Tutorials and updates will appear here when available.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="pictureGrid">
+        <div class="pic-card" onclick="openLightbox('home.png','Home')">
+          <img src="home.png" alt="Home tab"/>
+          <p>Home</p>
+        </div>
+        <div class="pic-card" onclick="openLightbox('paint.png','Paint')">
+          <img src="paint.png" alt="Paint tab"/>
+          <p>Paint</p>
+        </div>
+        <div class="pic-card" onclick="openLightbox('graph.png','Graph')">
+          <img src="graph.png" alt="Graph tab"/>
+          <p>Graph</p>
+        </div>
+        <div class="pic-card" onclick="openLightbox('settings.png','Settings')">
+          <img src="settings.png" alt="Settings tab"/>
+          <p>Settings</p>
+        </div>
       </div>
     </div>
   </div>
@@ -349,6 +372,29 @@ body{
 </div>
 
 <script>
+// Lightbox
+function openLightbox(src, caption){
+  var lb = document.getElementById('lightbox');
+  var img = document.getElementById('lightboxImg');
+  var cap = document.getElementById('lightboxCap');
+  img.src = src; cap.textContent = caption;
+  lb.style.display = 'flex';
+  setTimeout(function(){ lb.style.opacity = '1'; }, 10);
+}
+function closeLightbox(){
+  var lb = document.getElementById('lightbox');
+  lb.style.opacity = '0';
+  setTimeout(function(){ lb.style.display = 'none'; }, 250);
+}
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeLightbox(); });
+</script>
+
+<div id="lightbox" onclick="closeLightbox()" style="display:none;opacity:0;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:14px;transition:opacity .25s;cursor:zoom-out">
+  <img id="lightboxImg" src="" alt="" style="max-width:90vw;max-height:80vh;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.8);object-fit:contain"/>
+  <p id="lightboxCap" style="font-size:13px;color:rgba(255,255,255,.4)"></p>
+</div>
+
+<script>
 function copyKey(){
   navigator.clipboard.writeText('MNCO-FULL-LIFE-TIME').then(function(){
     var btn = document.getElementById('copyKeyBtn');
@@ -361,7 +407,7 @@ function copyKey(){
 </script>
 
 <script>
-const routes = {home:'/',howto:'/how-to-use',docs:'/documentation',videos:'/videos',key:'/get-a-key'};
+const routes = {home:'/',howto:'/how-to-use',docs:'/documentation',pictures:'/pictures',key:'/get-a-key'};
 function navigate(pageId){
   const current = document.querySelector('.page.active');
   const next = document.getElementById('page-'+pageId);
@@ -375,7 +421,7 @@ window.addEventListener('popstate',e=>{ const page=e.state?.page||'home'; naviga
 </script>
 <script>
 (function(){
-  var canvas = document.getElementById('snowCanvas');
+  var canvas = document.getElementById('bgCanvas');
   var ctx = canvas.getContext('2d');
   var flakes = [];
   var W, H;
@@ -387,7 +433,6 @@ window.addEventListener('popstate',e=>{ const page=e.state?.page||'home'; naviga
   resize();
   window.addEventListener('resize', resize);
 
-  // Create snowflakes
   var COUNT = 130;
   for(var i = 0; i < COUNT; i++){
     flakes.push({
@@ -408,10 +453,7 @@ window.addEventListener('popstate',e=>{ const page=e.state?.page||'home'; naviga
       f.wobble += f.wobbleSpeed;
       f.x += f.drift + Math.sin(f.wobble) * 0.3;
       f.y += f.speed;
-      if(f.y > H + 5){
-        f.y = -5;
-        f.x = Math.random() * W;
-      }
+      if(f.y > H + 5){ f.y = -5; f.x = Math.random() * W; }
       if(f.x > W + 5) f.x = -5;
       if(f.x < -5) f.x = W + 5;
       ctx.beginPath();
