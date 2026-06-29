@@ -35,7 +35,7 @@ body{
   flex-direction:column;text-align:center;padding:2rem 1.5rem;
   pointer-events:none;opacity:0;transform:translateY(18px);
   transition:opacity .35s cubic-bezier(.4,0,.2,1),transform .35s cubic-bezier(.4,0,.2,1);
-  will-change:transform,opacity;
+  will-change:transform,opacity;z-index:1;
 }
 .page.active{opacity:1;transform:translateY(0);pointer-events:all;position:relative}
 .page.exit{opacity:0;transform:translateY(-14px);pointer-events:none;position:fixed}
@@ -162,6 +162,8 @@ body{
 </style>
 </head>
 <body>
+
+<canvas id="snowCanvas" style="position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.6"></canvas>
 
 <div class="page active" id="page-home">
   <img class="mascot" src="app.png" alt="PaintX"/>
@@ -370,6 +372,57 @@ function navigate(pageId){
   history.pushState({page:pageId},'',routes[pageId]||'/');
 }
 window.addEventListener('popstate',e=>{ const page=e.state?.page||'home'; navigate(page); });
+</script>
+<script>
+(function(){
+  var canvas = document.getElementById('snowCanvas');
+  var ctx = canvas.getContext('2d');
+  var flakes = [];
+  var W, H;
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Create snowflakes
+  var COUNT = 130;
+  for(var i = 0; i < COUNT; i++){
+    flakes.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      r: Math.random() * 2.8 + 0.4,
+      speed: Math.random() * 0.8 + 0.2,
+      drift: (Math.random() - 0.5) * 0.3,
+      opacity: Math.random() * 0.55 + 0.1,
+      wobble: Math.random() * Math.PI * 2,
+      wobbleSpeed: Math.random() * 0.015 + 0.005
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    flakes.forEach(function(f){
+      f.wobble += f.wobbleSpeed;
+      f.x += f.drift + Math.sin(f.wobble) * 0.3;
+      f.y += f.speed;
+      if(f.y > H + 5){
+        f.y = -5;
+        f.x = Math.random() * W;
+      }
+      if(f.x > W + 5) f.x = -5;
+      if(f.x < -5) f.x = W + 5;
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,' + f.opacity + ')';
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
 </script>
 </body>
 </html>
