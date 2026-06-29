@@ -449,7 +449,7 @@ function requestKey(){
   var msg = document.getElementById('keyReqMsg');
   btn.disabled = true; btn.style.opacity = '0.5';
   msg.innerHTML = '<span style="font-size:12px;color:rgba(255,255,255,.3)">Generating...</span>';
-  fetch('https://paintx.gg/api/generate', {
+  fetch('https://paintx.vercel.app/api/generate', {
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body: JSON.stringify({password:'PUBLIC', name:name, plan:'Pro'})
