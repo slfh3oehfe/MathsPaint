@@ -192,20 +192,11 @@ a,button{cursor:none}
   transform:translate(-50%,-50%);
   transition:width .15s ease,height .15s ease,transform .1s ease,opacity .2s ease;
 }
-.cursor-ring{
-  position:fixed;
-  width:34px;height:34px;
-  border:1.5px solid rgba(255,255,255,.5);
-  border-radius:50%;
-  pointer-events:none;
-  z-index:99998;
-  transform:translate(-50%,-50%);
-  transition:width .2s ease,height .2s ease,opacity .2s ease,border-color .2s ease;
-}
+
 .cursor-dot.hover{width:10px;height:10px}
-.cursor-ring.hover{width:48px;height:48px;border-color:rgba(255,255,255,.8)}
+
 .cursor-dot.click{transform:translate(-50%,-50%) scale(.5)}
-.cursor-ring.click{width:26px;height:26px}
+
 </style>
 </head>
 <body>
@@ -218,7 +209,7 @@ a,button{cursor:none}
 </a>
 
 <div class="cursor-dot" id="cursorDot"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+
 
 <canvas id="bgCanvas" style="position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.6"></canvas>
 
@@ -536,7 +527,6 @@ window.addEventListener('popstate',e=>{ const page=e.state?.page||'home'; naviga
 <script>
 (function(){
   var dot = document.getElementById('cursor');
-  var ring = document.getElementById('cursorRing');
   var mx=0,my=0,rx=0,ry=0;
 
   document.addEventListener('mousemove', function(e){
@@ -554,9 +544,6 @@ window.addEventListener('popstate',e=>{ const page=e.state?.page||'home'; naviga
   function lerp(a,b,t){ return a+(b-a)*t; }
   function loop(){
     rx = lerp(rx, mx, 0.12);
-    ry = lerp(ry, my, 0.12);
-    ring.style.left = rx+'px';
-    ring.style.top = ry+'px';
     requestAnimationFrame(loop);
   }
   loop();
@@ -589,8 +576,7 @@ window.addEventListener('popstate',e=>{ const page=e.state?.page||'home'; naviga
 <script>
 (function(){
   var dot = document.getElementById('cursorDot');
-  var ring = document.getElementById('cursorRing');
-  var mx = 0, my = 0, rx = 0, ry = 0;
+  var mx = 0, my = 0;
 
   document.addEventListener('mousemove', function(e){
     mx = e.clientX; my = e.clientY;
@@ -602,9 +588,6 @@ window.addEventListener('popstate',e=>{ const page=e.state?.page||'home'; naviga
   function lerp(a,b,t){ return a+(b-a)*t; }
   function animate(){
     rx = lerp(rx, mx, 0.12);
-    ry = lerp(ry, my, 0.12);
-    ring.style.left = rx+'px';
-    ring.style.top = ry+'px';
     requestAnimationFrame(animate);
   }
   animate();
@@ -614,24 +597,20 @@ window.addEventListener('popstate',e=>{ const page=e.state?.page||'home'; naviga
   document.addEventListener('mouseover', function(e){
     if(e.target.closest(clickables)){
       dot.classList.add('hover');
-      ring.classList.add('hover');
     }
   });
   document.addEventListener('mouseout', function(e){
     if(e.target.closest(clickables)){
       dot.classList.remove('hover');
-      ring.classList.remove('hover');
     }
   });
 
   // Click effect
   document.addEventListener('mousedown', function(){
     dot.classList.add('click');
-    ring.classList.add('click');
   });
   document.addEventListener('mouseup', function(){
     dot.classList.remove('click');
-    ring.classList.remove('click');
   });
 
   // Hide when mouse leaves window
