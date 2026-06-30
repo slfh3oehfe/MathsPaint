@@ -175,11 +175,13 @@ body{
   .feat-grid{grid-template-columns:1fr}
   .app-name{font-size:26px}
 }
+/* Hide status bar link preview */
+.no-preview{-webkit-user-select:none}
 </style>
 </head>
 <body>
 
-<a href="/admin.html" style="position:fixed;bottom:20px;right:20px;z-index:100;display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;color:rgba(255,255,255,.18);text-decoration:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:999px;padding:6px 14px;transition:all .2s" onmouseover="this.style.color='rgba(255,255,255,.6)';this.style.borderColor='rgba(255,255,255,.15)';this.style.background='rgba(255,255,255,.07)'" onmouseout="this.style.color='rgba(255,255,255,.18)';this.style.borderColor='rgba(255,255,255,.07)';this.style.background='rgba(255,255,255,.04)'">
+<a href="#" onclick="event.preventDefault();window.location.href='/admin.html'" style="position:fixed;bottom:20px;right:20px;z-index:100;display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;color:rgba(255,255,255,.18);text-decoration:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:999px;padding:6px 14px;transition:all .2s" onmouseover="this.style.color='rgba(255,255,255,.6)';this.style.borderColor='rgba(255,255,255,.15)';this.style.background='rgba(255,255,255,.07)'" onmouseout="this.style.color='rgba(255,255,255,.18)';this.style.borderColor='rgba(255,255,255,.07)';this.style.background='rgba(255,255,255,.04)'">
   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
   Admin
 </a>
@@ -190,7 +192,7 @@ body{
   <img class="mascot" src="app.png" alt="PaintX"/>
 
   <div class="btn-row">
-    <a href="https://github.com/slfh3oehfe/MathsPaint/raw/main/Debug.zip" class="btn btn-download" download>
+    <a href="#" class="btn btn-download no-preview" onclick="event.preventDefault();window.location.href='https://github.com/slfh3oehfe/MathsPaint/raw/main/Debug.zip'">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Download
     </a>
