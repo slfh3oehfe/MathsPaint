@@ -181,6 +181,47 @@ a,button{cursor:none}
 /* Hide status bar link preview */
 .no-preview{-webkit-user-select:none}
 
+/* ── Updates ── */
+.updates-list{display:flex;flex-direction:column;gap:16px}
+.update-card{
+  display:flex;gap:20px;align-items:flex-start;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:16px;padding:22px 24px;
+  transition:border-color .2s,background .2s;
+}
+.update-card:hover{
+  border-color:rgba(255,255,255,.13);
+  background:rgba(255,255,255,.05);
+}
+.update-icon-box{
+  width:48px;height:48px;border-radius:12px;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+}
+.update-icon-box.clr-new{background:rgba(78,201,176,.12);border:1px solid rgba(78,201,176,.2)}
+.update-icon-box.clr-fix{background:rgba(248,175,60,.1);border:1px solid rgba(248,175,60,.18)}
+.update-icon-box.clr-improve{background:rgba(0,122,204,.12);border:1px solid rgba(0,122,204,.2)}
+.update-icon-box.clr-default{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09)}
+.update-content{flex:1;min-width:0}
+.update-top-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.update-title{font-size:15px;font-weight:600;color:rgba(255,255,255,.92);flex:1;min-width:0}
+.update-tags{display:flex;gap:5px;flex-wrap:wrap}
+.update-tag{
+  font-size:10px;font-weight:600;letter-spacing:.04em;
+  padding:3px 9px;border-radius:999px;
+}
+.update-tag.new{background:rgba(78,201,176,.12);color:#4ec9b0;border:1px solid rgba(78,201,176,.25)}
+.update-tag.fix{background:rgba(248,175,60,.1);color:#f8af3c;border:1px solid rgba(248,175,60,.22)}
+.update-tag.improve{background:rgba(0,122,204,.12);color:#5ab0f5;border:1px solid rgba(0,122,204,.25)}
+.update-body{font-size:13px;color:rgba(255,255,255,.42);line-height:1.75;white-space:pre-wrap;margin-bottom:10px}
+.update-footer{display:flex;align-items:center;gap:10px}
+.update-version{font-size:11px;font-weight:600;color:rgba(255,255,255,.2);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:2px 8px;font-family:monospace;letter-spacing:.06em}
+.update-date{font-size:11px;color:rgba(255,255,255,.2)}
+.update-divider{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.12)}
+.update-empty-state{display:flex;flex-direction:column;align-items:center;gap:14px;padding:80px 0;color:rgba(255,255,255,.15);text-align:center}
+.update-empty-state p{font-size:13px;color:rgba(255,255,255,.2)}
+
 /* Custom cursor */
 *{cursor:none!important}
 .cursor-dot{
@@ -496,26 +537,55 @@ const routes = {home:'/',howto:'/how-to-use',docs:'/documentation',pictures:'/pi
 function loadUpdates(){
   var container = document.getElementById('updatesContainer');
   if(!container) return;
+  container.innerHTML = '<div class="update-empty-state"><p style="color:rgba(255,255,255,.15)">Loading…</p></div>';
   fetch('https://paintx.vercel.app/api/updates')
     .then(function(r){ return r.json(); })
     .then(function(data){
       var updates = data.updates || [];
       container.innerHTML = '';
       if(!updates.length){
-        container.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:80px 0;color:rgba(255,255,255,.15)"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><p style="font-size:13px;color:rgba(255,255,255,.2)">No updates yet.</p></div>';
+        container.innerHTML = '<div class="update-empty-state"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><p>No updates yet — check back soon.</p></div>';
         return;
       }
+      var list = document.createElement('div');
+      list.className = 'updates-list';
       updates.forEach(function(u){
-        var tags=(u.tags||[]).map(function(t){var c=t==='New'?'new':t==='Fix'?'fix':'improve';return '<span class="update-tag update-tag-'+c+'">'+t+'</span>';}).join('');
-        var d=new Date(u.date);
-        var ds=d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
-        var card=document.createElement('div');
-        card.className='update-card';
-        card.innerHTML='<div class="update-meta">'+(u.version?'<span class="update-version">'+u.version+'</span><div class="update-dot"></div>':'')+'<span class="update-date">'+ds+'</span></div>'+(tags?'<div style="margin-bottom:8px">'+tags+'</div>':'')+'<div class="update-title">'+u.title+'</div><div class="update-body">'+u.body+'</div>';
-        container.appendChild(card);
+        // Pick icon and colour based on first tag
+        var firstTag = (u.tags && u.tags[0]) || '';
+        var iconMap = {New:'✨', Fix:'🔧', Improvement:'⚡'};
+        var clrMap  = {New:'clr-new', Fix:'clr-fix', Improvement:'clr-improve'};
+        var icon = iconMap[firstTag] || '📄';
+        var clr  = clrMap[firstTag]  || 'clr-default';
+        // Tags html
+        var tagsHtml = (u.tags||[]).map(function(t){
+          var c = t==='New'?'new': t==='Fix'?'fix':'improve';
+          return '<span class="update-tag '+c+'">'+t+'</span>';
+        }).join('');
+        // Date
+        var d = new Date(u.date);
+        var ds = d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+        var card = document.createElement('div');
+        card.className = 'update-card';
+        card.innerHTML =
+          '<div class="update-icon-box '+clr+'">'+icon+'</div>'+
+          '<div class="update-content">'+
+            '<div class="update-top-row">'+
+              '<div class="update-title">'+u.title+'</div>'+
+              (tagsHtml ? '<div class="update-tags">'+tagsHtml+'</div>' : '')+
+            '</div>'+
+            '<div class="update-body">'+u.body+'</div>'+
+            '<div class="update-footer">'+
+              (u.version ? '<span class="update-version">'+u.version+'</span><div class="update-divider"></div>' : '')+
+              '<span class="update-date">'+ds+'</span>'+
+            '</div>'+
+          '</div>';
+        list.appendChild(card);
       });
+      container.appendChild(list);
     })
-    .catch(function(){ container.innerHTML='<div style="padding:60px 0;text-align:center;color:rgba(255,255,255,.2);font-size:13px">Could not load updates.</div>'; });
+    .catch(function(){
+      container.innerHTML = '<div class="update-empty-state"><p style="color:rgba(255,255,255,.25)">Could not load updates. Please try again later.</p></div>';
+    });
 }
 
 function navigate(pageId){
