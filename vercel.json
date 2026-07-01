@@ -3,7 +3,6 @@
     { "source": "/how-to-use",    "destination": "/index.html" },
     { "source": "/documentation", "destination": "/index.html" },
     { "source": "/pictures",      "destination": "/index.html" },
-    { "source": "/get-a-key",     "destination": "/index.html" },
     { "source": "/updates",       "destination": "/index.html" }
   ]
 }
