@@ -472,23 +472,18 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- ══ UPDATES ══ -->
 <div class="page" id="page-updates">
-  <div class="inner-page">
-    <div class="inner-wrap">
-      <button class="back-btn" onclick="navigate('home')">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+  <div class="inner-scroll">
+    <div class="docs-wrap">
+      <button class="docs-back" onclick="navigate('home')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         Back
       </button>
-      <div class="page-hdr" style="padding-bottom:28px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:40px">
-        <img src="app.png" alt="PaintX"/>
-        <div class="page-hdr-text">
-          <h1>Updates</h1>
-          <p>Latest changes and release notes</p>
-        </div>
+      <div class="docs-header">
+        <h1>Updates</h1>
       </div>
-      <div id="updatesContainer">
-        <div class="update-empty" id="updatesEmpty">
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          <p>No updates posted yet.</p>
+      <div class="docs-section">
+        <div id="updatesContainer">
+          <p style="font-size:13px;color:rgba(255,255,255,.2)">Loading…</p>
         </div>
       </div>
     </div>
