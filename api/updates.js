@@ -8,43 +8,56 @@ export default async function handler(req, res) {
   const TOKEN = process.env.KV_REST_API_TOKEN;
   const RKEY  = 'paintx:updates';
 
+  // Always use POST pipeline for SET — avoids URL length limits and encoding issues
   async function kvGet(k) {
     const r = await fetch(`${BASE}/get/${encodeURIComponent(k)}`, {
       headers: { Authorization: `Bearer ${TOKEN}` }
     });
     const j = await r.json();
-    return j.result || null;
+    return j.result ?? null;
   }
 
   async function kvSet(k, value) {
-    // value must be a string; encode it in the URL path
-    const r = await fetch(
-      `${BASE}/set/${encodeURIComponent(k)}/${encodeURIComponent(value)}`,
-      { headers: { Authorization: `Bearer ${TOKEN}` } }
-    );
+    // Use pipeline endpoint so the value is in the body, not the URL
+    const r = await fetch(`${BASE}/pipeline`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${TOKEN}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify([['SET', k, value]])
+    });
     const j = await r.json();
-    return j.result === 'OK';
+    return Array.isArray(j) && j[0]?.result === 'OK';
+  }
+
+  // Parse the stored value — handle double-encoded strings gracefully
+  function parseUpdates(raw) {
+    if (!raw) return [];
+    try {
+      let v = typeof raw === 'string' ? JSON.parse(raw) : raw;
+      // If still a string (double-encoded), parse again
+      if (typeof v === 'string') v = JSON.parse(v);
+      return Array.isArray(v) ? v : [];
+    } catch(e) {
+      return [];
+    }
   }
 
   // ── GET — public ──
   if (req.method === 'GET') {
     try {
       const raw = await kvGet(RKEY);
-      const updates = raw ? JSON.parse(raw) : [];
-      return res.status(200).json({ updates });
+      return res.status(200).json({ updates: parseUpdates(raw) });
     } catch (e) {
       return res.status(500).json({ error: 'Failed to load updates' });
     }
   }
 
-  // ── POST — publish update (admin) ──
+  // ── POST — publish (admin) ──
   if (req.method === 'POST') {
     const { password, title, body, version, tags } = req.body || {};
     if (password !== process.env.ADMIN_PASSWORD) return res.status(401).json({ error: 'Unauthorised' });
     if (!title || !body) return res.status(400).json({ error: 'title and body are required' });
     try {
-      const raw = await kvGet(RKEY);
-      const updates = raw ? JSON.parse(raw) : [];
+      const updates = parseUpdates(await kvGet(RKEY));
       const entry = {
         id: Date.now().toString(),
         title: title.trim(),
@@ -62,13 +75,12 @@ export default async function handler(req, res) {
     }
   }
 
-  // ── DELETE — remove update by id (admin) ──
+  // ── DELETE — remove by id (admin) ──
   if (req.method === 'DELETE') {
     const { password, id } = req.body || {};
     if (password !== process.env.ADMIN_PASSWORD) return res.status(401).json({ error: 'Unauthorised' });
     try {
-      const raw = await kvGet(RKEY);
-      const updates = raw ? JSON.parse(raw) : [];
+      const updates = parseUpdates(await kvGet(RKEY));
       const filtered = updates.filter(u => u.id !== id);
       const ok = await kvSet(RKEY, JSON.stringify(filtered));
       if (!ok) return res.status(500).json({ error: 'Failed to delete' });
