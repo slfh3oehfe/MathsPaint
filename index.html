@@ -87,6 +87,7 @@ a,button{cursor:none}
 .icon-btn[data-label="Documentation"]:hover{width:138px}
 .icon-btn[data-label="Pictures"]:hover       {width:86px}
 .icon-btn[data-label="Get a Key"]:hover    {width:100px}
+.icon-btn[data-label="Updates"]:hover      {width:90px}
 
 .icon-inner{width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .btn-label{
@@ -238,6 +239,11 @@ a,button{cursor:none}
       <button class="icon-btn" data-label="Get a Key" onclick="navigate('key')" aria-label="Get a Key">
         <span class="icon-inner"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></span>
         <span class="btn-label">Get a Key</span>
+      </button>
+
+      <button class="icon-btn" data-label="Updates" onclick="navigate('updates')" aria-label="Updates">
+        <span class="icon-inner"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+        <span class="btn-label">Updates</span>
       </button>
     </div>
   </div>
@@ -464,12 +470,64 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 
+<!-- ══ UPDATES ══ -->
+<div class="page" id="page-updates">
+  <div class="inner-page">
+    <div class="inner-wrap">
+      <button class="back-btn" onclick="navigate('home')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <div class="page-hdr" style="padding-bottom:28px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:40px">
+        <img src="app.png" alt="PaintX"/>
+        <div class="page-hdr-text">
+          <h1>Updates</h1>
+          <p>Latest changes and release notes</p>
+        </div>
+      </div>
+      <div id="updatesContainer">
+        <div class="update-empty" id="updatesEmpty">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <p>No updates posted yet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-const routes = {home:'/',howto:'/how-to-use',docs:'/documentation',pictures:'/pictures',key:'/get-a-key'};
+const routes = {home:'/',howto:'/how-to-use',docs:'/documentation',pictures:'/pictures',key:'/get-a-key',updates:'/updates'};
+
+function loadUpdates(){
+  var container = document.getElementById('updatesContainer');
+  if(!container) return;
+  fetch('https://paintx.vercel.app/api/updates')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var updates = data.updates || [];
+      container.innerHTML = '';
+      if(!updates.length){
+        container.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:80px 0;color:rgba(255,255,255,.15)"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><p style="font-size:13px;color:rgba(255,255,255,.2)">No updates yet.</p></div>';
+        return;
+      }
+      updates.forEach(function(u){
+        var tags=(u.tags||[]).map(function(t){var c=t==='New'?'new':t==='Fix'?'fix':'improve';return '<span class="update-tag update-tag-'+c+'">'+t+'</span>';}).join('');
+        var d=new Date(u.date);
+        var ds=d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+        var card=document.createElement('div');
+        card.className='update-card';
+        card.innerHTML='<div class="update-meta">'+(u.version?'<span class="update-version">'+u.version+'</span><div class="update-dot"></div>':'')+'<span class="update-date">'+ds+'</span></div>'+(tags?'<div style="margin-bottom:8px">'+tags+'</div>':'')+'<div class="update-title">'+u.title+'</div><div class="update-body">'+u.body+'</div>';
+        container.appendChild(card);
+      });
+    })
+    .catch(function(){ container.innerHTML='<div style="padding:60px 0;text-align:center;color:rgba(255,255,255,.2);font-size:13px">Could not load updates.</div>'; });
+}
+
 function navigate(pageId){
   const current = document.querySelector('.page.active');
   const next = document.getElementById('page-'+pageId);
   if(!next||current===next) return;
+  if(pageId==='updates') loadUpdates();
   current.classList.add('exit'); current.classList.remove('active');
   requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ next.classList.add('active'); window.scrollTo(0,0); }); });
   current.addEventListener('transitionend',()=>{ current.classList.remove('exit'); },{once:true});
