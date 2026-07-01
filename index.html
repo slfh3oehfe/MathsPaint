@@ -86,7 +86,6 @@ a,button{cursor:none}
 .icon-btn[data-label="How to Use"]:hover  {width:114px}
 .icon-btn[data-label="Documentation"]:hover{width:138px}
 .icon-btn[data-label="Pictures"]:hover       {width:86px}
-.icon-btn[data-label="Get a Key"]:hover    {width:100px}
 .icon-btn[data-label="Updates"]:hover      {width:90px}
 
 .icon-inner{width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -211,9 +210,9 @@ a,button{cursor:none}
   font-size:10px;font-weight:600;letter-spacing:.04em;
   padding:3px 9px;border-radius:999px;
 }
-.update-tag.new{background:rgba(78,201,176,.12);color:#4ec9b0;border:1px solid rgba(78,201,176,.25)}
-.update-tag.fix{background:rgba(248,175,60,.1);color:#f8af3c;border:1px solid rgba(248,175,60,.22)}
-.update-tag.improve{background:rgba(0,122,204,.12);color:#5ab0f5;border:1px solid rgba(0,122,204,.25)}
+.update-tag.new{background:rgba(78,201,176,.18);color:#fff;border:1px solid rgba(78,201,176,.3)}
+.update-tag.fix{background:rgba(248,175,60,.18);color:#fff;border:1px solid rgba(248,175,60,.28)}
+.update-tag.improve{background:rgba(0,122,204,.22);color:#fff;border:1px solid rgba(0,122,204,.32)}
 .update-body{font-size:13px;color:rgba(255,255,255,.42);line-height:1.75;white-space:pre-wrap;margin-bottom:10px}
 .update-footer{display:flex;align-items:center;gap:10px}
 .update-version{font-size:11px;font-weight:600;color:rgba(255,255,255,.2);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:2px 8px;font-family:monospace;letter-spacing:.06em}
@@ -277,11 +276,6 @@ a,button{cursor:none}
         <span class="icon-inner"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></span>
         <span class="btn-label">Pictures</span>
       </button>
-      <button class="icon-btn" data-label="Get a Key" onclick="navigate('key')" aria-label="Get a Key">
-        <span class="icon-inner"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></span>
-        <span class="btn-label">Get a Key</span>
-      </button>
-
       <button class="icon-btn" data-label="Updates" onclick="navigate('updates')" aria-label="Updates">
         <span class="icon-inner"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
         <span class="btn-label">Updates</span>
@@ -377,6 +371,23 @@ a,button{cursor:none}
         <div class="docs-card"><h3>Where is my data stored?</h3><p>All settings, profile and session data are stored locally. Nothing is sent externally.</p></div>
         <div class="docs-card"><h3>Can I use my own background image?</h3><p>Yes. Go to Settings → Appearance → App Background and paste an image URL or choose a file from your device.</p></div>
       </div>
+
+      <div class="docs-section">
+        <h2>Licence Key</h2>
+        <p>PaintX requires a valid licence key to get started. Keys follow the format <code style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:2px 7px;font-size:12px;font-family:monospace">PX-XXXX-XXXX-XXXX</code> and are issued personally — there is no self-serve shop.</p>
+        <div class="step" style="margin-top:14px">
+          <div class="step-num">1</div>
+          <div class="step-info"><h3>Contact the developer</h3><p>Reach out to request a key. Each key is tied to your name and grants lifetime Pro access.</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-info"><h3>Enter it at first launch</h3><p>On first open PaintX will prompt you for your key. Paste it in and click Continue — it's validated instantly.</p></div>
+        </div>
+        <div class="step" style="border-bottom:none">
+          <div class="step-num">3</div>
+          <div class="step-info"><h3>You're set</h3><p>Once validated your key is saved locally. You won't need to enter it again unless you log out or reinstall.</p></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -414,44 +425,7 @@ a,button{cursor:none}
   </div>
 </div>
 
-<div class="page" id="page-key">
-  <div class="inner-scroll">
-    <div class="docs-wrap">
-      <button class="docs-back" onclick="navigate('home')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        Back
-      </button>
-      <div class="docs-header">
-        <img src="app.png" alt="PaintX"/>
-        <h1>Get a Key</h1>
-      </div>
-      <div class="docs-section">
-        <h2>Your Licence Key</h2>
-        <p>PaintX uses a one-time lifetime licence key. You enter it once on first launch and it saves permanently — no logins, no subscriptions, no expiry.</p>
-        <div class="docs-card">
-          <h3>How to get a key</h3>
-          <p>Keys are distributed manually by the admin. To get your licence key, contact the admin directly and they will generate one for you.</p>
-        </div>
-      </div>
-      <hr class="docs-divider"/>
-      <div class="docs-section">
-        <h2>Why do we use a licence?</h2>
-        <p>We use a simple one-time key system for a few reasons:</p>
-        <div class="docs-card"><h3>Control distribution</h3><p>The key lets us control who has access to the app without needing accounts, servers or a backend. One key, one download, done.</p></div>
-        <div class="docs-card"><h3>No accounts needed</h3><p>There is no server storing your data. The key is verified locally — your name, settings, canvases and profile never leave your machine.</p></div>
-        <div class="docs-card"><h3>Prevent mass redistribution</h3><p>Without a key system anyone could share the app freely and we would have no way to manage updates or support. The key keeps the user base intentional.</p></div>
-        <div class="docs-card"><h3>It is lifetime — not a subscription</h3><p>You pay once (or receive the key) and it never expires. There are no renewals, no monthly fees and no features locked behind tiers.</p></div>
-      </div>
-      <hr class="docs-divider"/>
-      <div class="docs-section">
-        <h2>How to use your key</h2>
-        <div class="step"><div class="step-num">1</div><div class="step-info"><h3>Open PaintX</h3><p>Launch the app for the first time. You will be greeted with the setup wizard.</p></div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-info"><h3>Enter your key</h3><p>Type or paste your generated key (starting with <strong style="color:#fff;font-family:monospace">PX-</strong>) into the licence key field.</p></div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-info"><h3>Continue setup</h3><p>Set your display name and profile picture, then click Start. Your key is saved — you will never need to enter it again.</p></div></div>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 <script>
 // Lightbox
@@ -532,7 +506,7 @@ document.addEventListener('DOMContentLoaded', function(){
 </div>
 
 <script>
-const routes = {home:'/',howto:'/how-to-use',docs:'/documentation',pictures:'/pictures',key:'/get-a-key',updates:'/updates'};
+const routes = {home:'/',howto:'/how-to-use',docs:'/documentation',pictures:'/pictures',updates:'/updates'};
 
 function loadUpdates(){
   var container = document.getElementById('updatesContainer');
@@ -550,12 +524,6 @@ function loadUpdates(){
       var list = document.createElement('div');
       list.className = 'updates-list';
       updates.forEach(function(u){
-        // Pick icon and colour based on first tag
-        var firstTag = (u.tags && u.tags[0]) || '';
-        var iconMap = {New:'✨', Fix:'🔧', Improvement:'⚡'};
-        var clrMap  = {New:'clr-new', Fix:'clr-fix', Improvement:'clr-improve'};
-        var icon = iconMap[firstTag] || '📄';
-        var clr  = clrMap[firstTag]  || 'clr-default';
         // Tags html
         var tagsHtml = (u.tags||[]).map(function(t){
           var c = t==='New'?'new': t==='Fix'?'fix':'improve';
@@ -567,7 +535,6 @@ function loadUpdates(){
         var card = document.createElement('div');
         card.className = 'update-card';
         card.innerHTML =
-          '<div class="update-icon-box '+clr+'">'+icon+'</div>'+
           '<div class="update-content">'+
             '<div class="update-top-row">'+
               '<div class="update-title">'+u.title+'</div>'+
