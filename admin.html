@@ -13,9 +13,11 @@ h1{font-size:22px;font-weight:700;margin-bottom:6px}
 .card{background:#0f0f0f;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:24px;margin-bottom:16px}
 .card h2{font-size:13px;font-weight:600;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px}
 .row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-input,select{background:#1a1a1a;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-family:inherit;font-size:13px;padding:9px 12px;outline:none;flex:1;min-width:140px}
-input:focus,select:focus{border-color:rgba(255,255,255,.3)}
+input,select,textarea{background:#1a1a1a;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-family:inherit;font-size:13px;padding:9px 12px;outline:none;flex:1;min-width:140px}
+input:focus,select:focus,textarea:focus{border-color:rgba(255,255,255,.3)}
 input[type=password]{letter-spacing:.1em}
+input[type=checkbox]{flex:none;width:14px;height:14px;min-width:0;cursor:pointer;accent-color:#007acc}
+textarea{resize:vertical;min-height:100px;line-height:1.6}
 button{background:#fff;color:#000;border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;padding:9px 18px;cursor:pointer;white-space:nowrap;transition:opacity .15s}
 button:hover{opacity:.85}
 button.danger{background:rgba(224,85,85,.15);color:#e05555;border:1px solid rgba(224,85,85,.3)}
@@ -34,6 +36,15 @@ button.sec:hover{background:rgba(255,255,255,.14)}
 .msg{font-size:12px;padding:8px 12px;border-radius:6px;margin-top:8px}
 .msg.err{background:rgba(224,85,85,.1);border:1px solid rgba(224,85,85,.2);color:#e05555}
 .msg.ok{background:rgba(78,201,176,.08);border:1px solid rgba(78,201,176,.2);color:#4ec9b0}
+.tag-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:4px 0 10px}
+.tag-row span{font-size:11px;color:rgba(255,255,255,.3)}
+.tag-label{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:#888;user-select:none}
+.update-row{background:#111;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:12px 14px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.update-row-info{flex:1;min-width:0}
+.update-row-title{font-size:12px;font-weight:600;color:#ddd;margin-bottom:3px}
+.update-row-meta{font-size:11px;color:#444;margin-bottom:4px}
+.update-row-body{font-size:11px;color:#555;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.update-tag{display:inline-block;font-size:10px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:1px 7px;color:#666;margin-right:4px}
 #loginWrap{display:block}
 #mainWrap{display:none}
 </style>
@@ -41,15 +52,15 @@ button.sec:hover{background:rgba(255,255,255,.14)}
 <body>
 <div class="wrap">
   <h1>PaintX Admin</h1>
-  <p class="sub">Manage licence keys</p>
+  <p class="sub">Manage licence keys and updates</p>
 
   <!-- Login -->
   <div id="loginWrap">
     <div class="card">
       <h2>Login</h2>
       <div class="row">
-        <input type="password" id="pwInput" placeholder="Admin password" onkeydown="if(event.key==='Enter')login()"/>
-        <button onclick="login()">Login</button>
+        <input type="password" id="pwInput" placeholder="Admin password"/>
+        <button id="loginBtn">Login</button>
       </div>
       <div id="loginMsg"></div>
     </div>
@@ -57,180 +68,204 @@ button.sec:hover{background:rgba(255,255,255,.14)}
 
   <!-- Main -->
   <div id="mainWrap">
-    <!-- Generate -->
+
+    <!-- Generate Key -->
     <div class="card">
       <h2>Generate Key</h2>
       <div class="row">
         <input type="text" id="genName" placeholder="User name (e.g. John)" value="User"/>
         <select id="genPlan"><option value="Pro">Pro</option></select>
-        <button onclick="generateKey()">Generate</button>
+        <button id="genBtn">Generate</button>
       </div>
       <div id="genOut" style="display:none" class="key-out">
         <span id="genKey"></span>
-        <button class="copy-btn" id="genCopy" onclick="copyGen()">Copy</button>
+        <button class="copy-btn" id="genCopy">Copy</button>
       </div>
       <div id="genMsg"></div>
     </div>
 
-    <!-- Key list -->
+    <!-- Key List -->
     <div class="card">
-      <h2>All Keys <button class="sec" onclick="loadKeys()" style="font-size:11px;padding:5px 12px;margin-left:8px">Refresh</button></h2>
-      <div class="key-list" id="keyList"><p style="font-size:13px;color:rgba(255,255,255,.3)">Loading...</p></div>
+      <h2>All Keys <button class="sec" id="refreshKeysBtn" style="font-size:11px;padding:5px 12px;margin-left:8px">Refresh</button></h2>
+      <div class="key-list" id="keyList"><p style="font-size:13px;color:rgba(255,255,255,.3)">Loading…</p></div>
     </div>
 
     <!-- Post Update -->
     <div class="card">
       <h2>Post Update</h2>
       <div class="row">
-        <input type="text" id="upTitle" placeholder="Title  e.g. New brush tools"/>
-        <input type="text" id="upVersion" placeholder="Version  e.g. v4.3.0" style="max-width:160px"/>
+        <input type="text" id="upTitle" placeholder="Title — e.g. New brush tools"/>
+        <input type="text" id="upVersion" placeholder="Version  e.g. v4.3.0" style="max-width:160px;flex:none"/>
       </div>
-      <div class="row" style="align-items:center;gap:14px;flex-wrap:wrap">
-        <span style="font-size:11px;color:rgba(255,255,255,.3)">Tags:</span>
-        <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:#888"><input type="checkbox" id="tag-New" value="New"/> New</label>
-        <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:#888"><input type="checkbox" id="tag-Fix" value="Fix"/> Fix</label>
-        <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:#888"><input type="checkbox" id="tag-Improvement" value="Improvement"/> Improvement</label>
+      <div class="tag-row">
+        <span>Tags:</span>
+        <label class="tag-label"><input type="checkbox" id="tag-New"/> New</label>
+        <label class="tag-label"><input type="checkbox" id="tag-Fix"/> Fix</label>
+        <label class="tag-label"><input type="checkbox" id="tag-Improvement"/> Improvement</label>
       </div>
-      <div class="row" style="align-items:flex-start">
-        <textarea id="upBody" placeholder="Describe what changed…" style="flex:1;min-height:100px;resize:vertical;background:#111;border:1px solid #222;border-radius:6px;color:#ccc;font-size:12px;padding:9px 12px;outline:none;font-family:inherit;width:100%"></textarea>
+      <div class="row">
+        <textarea id="upBody" placeholder="Describe what changed…"></textarea>
       </div>
       <div class="row" style="gap:8px">
-        <button onclick="postUpdate()">Publish Update</button>
-        <button class="sec" onclick="loadExistingUpdates()">Refresh List</button>
+        <button id="publishBtn">Publish Update</button>
+        <button class="sec" id="refreshUpdatesBtn">Refresh List</button>
       </div>
-      <div id="upResult" style="font-size:12px;color:#4ec9b0;min-height:18px"></div>
-      <div id="existingUpdates" style="margin-top:18px;display:flex;flex-direction:column;gap:8px"></div>
+      <div id="upResult" style="font-size:12px;min-height:18px;margin-top:4px"></div>
+      <div id="existingUpdates" style="margin-top:16px;display:flex;flex-direction:column;gap:8px"></div>
     </div>
+
   </div>
 </div>
 
 <script>
 var pw = '';
 
-function login(){
-  pw = document.getElementById('pwInput').value;
-  fetch('/api/list',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})})
-  .then(r=>r.json()).then(d=>{
-    if(d.error){ document.getElementById('loginMsg').innerHTML='<div class="msg err">Wrong password</div>'; return; }
-    document.getElementById('loginWrap').style.display='none';
-    document.getElementById('mainWrap').style.display='block';
-    renderKeys(d.keys);
-    loadExistingUpdates();
-  }).catch(()=>{ document.getElementById('loginMsg').innerHTML='<div class="msg err">Connection error</div>'; });
+// ── helpers ──
+function qs(id){ return document.getElementById(id); }
+function setMsg(id, text, type){
+  var el = qs(id);
+  if(!el) return;
+  el.textContent = text;
+  el.style.color = type === 'err' ? '#e05555' : type === 'ok' ? '#4ec9b0' : '#888';
+}
+function post(url, body){
+  return fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json();});
+}
+function del(url, body){
+  return fetch(url,{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json();});
 }
 
+// ── login ──
+function login(){
+  pw = qs('pwInput').value;
+  if(!pw) return;
+  post('/api/list', {password: pw}).then(function(d){
+    if(d.error){ qs('loginMsg').innerHTML='<div class="msg err">Wrong password</div>'; pw=''; return; }
+    qs('loginWrap').style.display = 'none';
+    qs('mainWrap').style.display = 'block';
+    renderKeys(d.keys);
+    loadExistingUpdates();
+  }).catch(function(){ qs('loginMsg').innerHTML='<div class="msg err">Connection error</div>'; });
+}
+
+qs('pwInput').addEventListener('keydown', function(e){ if(e.key==='Enter') login(); });
+qs('loginBtn').addEventListener('click', login);
+
+// ── keys ──
 function generateKey(){
-  var name = document.getElementById('genName').value||'User';
-  var plan = document.getElementById('genPlan').value||'Pro';
-  fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw,name,plan})})
-  .then(r=>r.json()).then(d=>{
-    if(d.error){ document.getElementById('genMsg').innerHTML='<div class="msg err">'+d.error+'</div>'; return; }
-    document.getElementById('genKey').textContent = d.key;
-    document.getElementById('genOut').style.display='flex';
-    document.getElementById('genMsg').innerHTML='<div class="msg ok" style="margin-top:8px">Key generated and stored</div>';
+  var name = qs('genName').value || 'User';
+  var plan = qs('genPlan').value || 'Pro';
+  post('/api/generate', {password:pw, name:name, plan:plan}).then(function(d){
+    if(d.error){ qs('genMsg').innerHTML='<div class="msg err">'+d.error+'</div>'; return; }
+    qs('genKey').textContent = d.key;
+    qs('genOut').style.display = 'flex';
+    qs('genMsg').innerHTML = '<div class="msg ok" style="margin-top:8px">Key generated</div>';
     loadKeys();
-  });
+  }).catch(function(){ qs('genMsg').innerHTML='<div class="msg err">Error</div>'; });
 }
 
 function copyGen(){
-  var key = document.getElementById('genKey').textContent;
-  navigator.clipboard.writeText(key).then(()=>{
-    var btn=document.getElementById('genCopy');
-    btn.textContent='Copied!';btn.classList.add('ok');
-    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('ok');},2000);
+  var key = qs('genKey').textContent;
+  navigator.clipboard.writeText(key).then(function(){
+    qs('genCopy').textContent = 'Copied!';
+    qs('genCopy').classList.add('ok');
+    setTimeout(function(){ qs('genCopy').textContent='Copy'; qs('genCopy').classList.remove('ok'); }, 2000);
   });
 }
 
 function loadKeys(){
-  fetch('/api/list',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})})
-  .then(r=>r.json()).then(d=>{ if(d.keys) renderKeys(d.keys); });
+  post('/api/list', {password:pw}).then(function(d){ if(d.keys) renderKeys(d.keys); });
 }
 
 function renderKeys(keys){
-  var el = document.getElementById('keyList');
-  if(!keys||!keys.length){ el.innerHTML='<p style="font-size:13px;color:rgba(255,255,255,.3)">No keys yet</p>'; return; }
-  el.innerHTML = keys.map(function(k){
-    return '<div class="key-row">'+
-      '<code>'+k.key+'</code>'+
-      '<span class="meta">'+k.name+' · '+k.plan+'</span>'+
-      '<button class="danger" onclick="revokeKey(\''+k.key+'\')">Revoke</button>'+
-      '</div>';
-  }).join('');
+  var el = qs('keyList');
+  if(!keys || !keys.length){ el.innerHTML='<p style="font-size:13px;color:rgba(255,255,255,.3)">No keys yet</p>'; return; }
+  el.innerHTML = '';
+  keys.forEach(function(k){
+    var row = document.createElement('div');
+    row.className = 'key-row';
+    row.innerHTML = '<code>'+k.key+'</code><span class="meta">'+k.name+' · '+k.plan+'</span>';
+    var btn = document.createElement('button');
+    btn.className = 'danger';
+    btn.textContent = 'Revoke';
+    btn.addEventListener('click', function(){ revokeKey(k.key); });
+    row.appendChild(btn);
+    el.appendChild(row);
+  });
 }
 
 function revokeKey(key){
   if(!confirm('Revoke '+key+'?')) return;
-  fetch('/api/revoke',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw,key})})
-  .then(r=>r.json()).then(d=>{ if(d.ok) loadKeys(); });
+  post('/api/revoke', {password:pw, key:key}).then(function(d){ if(d.ok) loadKeys(); });
 }
 
+qs('genBtn').addEventListener('click', generateKey);
+qs('genCopy').addEventListener('click', copyGen);
+qs('refreshKeysBtn').addEventListener('click', loadKeys);
+
+// ── updates ──
 function postUpdate(){
-  var title = document.getElementById('upTitle').value.trim();
-  var version = document.getElementById('upVersion').value.trim();
-  var body = document.getElementById('upBody').value.trim();
-  var tags = ['New','Fix','Improvement'].filter(function(t){
-    var el = document.getElementById('tag-'+t);
-    return el && el.checked;
-  });
-  var res = document.getElementById('upResult');
-  if(!title||!body){ res.style.color='#e05555'; res.textContent='Title and body are required.'; return; }
-  res.style.color='#888'; res.textContent='Publishing…';
-  fetch('/api/updates',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({password:pw, title, body, version, tags})
-  })
-  .then(function(r){return r.json();})
-  .then(function(d){
-    if(d.error){ res.style.color='#e05555'; res.textContent=d.error; return; }
-    res.style.color='#4ec9b0'; res.textContent='Update published!';
-    document.getElementById('upTitle').value='';
-    document.getElementById('upVersion').value='';
-    document.getElementById('upBody').value='';
-    ['New','Fix','Improvement'].forEach(function(t){
-      var el=document.getElementById('tag-'+t); if(el) el.checked=false;
-    });
+  var title   = qs('upTitle').value.trim();
+  var version = qs('upVersion').value.trim();
+  var body    = qs('upBody').value.trim();
+  var tags    = ['New','Fix','Improvement'].filter(function(t){ var el=qs('tag-'+t); return el&&el.checked; });
+  if(!title || !body){ setMsg('upResult','Title and body are required.','err'); return; }
+  setMsg('upResult','Publishing…','');
+  post('/api/updates', {password:pw, title:title, body:body, version:version, tags:tags}).then(function(d){
+    if(d.error){ setMsg('upResult', d.error, 'err'); return; }
+    setMsg('upResult', 'Update published!', 'ok');
+    qs('upTitle').value = '';
+    qs('upVersion').value = '';
+    qs('upBody').value = '';
+    ['New','Fix','Improvement'].forEach(function(t){ var el=qs('tag-'+t); if(el) el.checked=false; });
     loadExistingUpdates();
-  })
-  .catch(function(){ res.style.color='#e05555'; res.textContent='Connection error.'; });
+  }).catch(function(){ setMsg('upResult','Connection error.','err'); });
 }
 
 function loadExistingUpdates(){
-  var cont = document.getElementById('existingUpdates');
+  var cont = qs('existingUpdates');
   if(!cont) return;
-  cont.innerHTML='<p style="font-size:12px;color:rgba(255,255,255,.25)">Loading…</p>';
-  fetch('/api/updates')
-  .then(function(r){return r.json();})
-  .then(function(d){
-    var updates = d.updates||[];
-    if(!updates.length){ cont.innerHTML='<p style="font-size:12px;color:rgba(255,255,255,.2)">No updates posted yet.</p>'; return; }
-    cont.innerHTML='';
+  cont.innerHTML = '<p style="font-size:12px;color:rgba(255,255,255,.25)">Loading…</p>';
+  fetch('/api/updates').then(function(r){return r.json();}).then(function(d){
+    var updates = d.updates || [];
+    cont.innerHTML = '';
+    if(!updates.length){
+      cont.innerHTML = '<p style="font-size:12px;color:rgba(255,255,255,.2)">No updates posted yet.</p>';
+      return;
+    }
     updates.forEach(function(u){
-      var div=document.createElement('div');
-      div.style.cssText='background:#111;border:1px solid #222;border-radius:8px;padding:12px 14px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px';
-      var d=new Date(u.date);
-      var ds=d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-      var tags=(u.tags||[]).map(function(t){return '<span style="font-size:10px;background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:2px 7px;color:#888">'+t+'</span>';}).join(' ');
-      div.innerHTML='<div style="flex:1"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:12px;font-weight:600;color:#ddd">'+u.title+'</span>'+(u.version?'<span style="font-size:10px;color:#555">'+u.version+'</span>':'')+'<span style="font-size:10px;color:#444">'+ds+'</span></div>'+(tags?'<div style="margin-bottom:5px">'+tags+'</div>':'')+'<div style="font-size:11px;color:#666;line-height:1.5">'+u.body.slice(0,120)+(u.body.length>120?'…':'')+'</div></div><button onclick="deleteUpdate(''+u.id+'')" style="background:transparent;border:1px solid #3a1a1a;border-radius:5px;color:#e05555;font-size:11px;padding:4px 10px;cursor:pointer;flex-shrink:0">Delete</button>';
-      cont.appendChild(div);
+      var row = document.createElement('div');
+      row.className = 'update-row';
+      var date = new Date(u.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+      var tagHtml = (u.tags||[]).map(function(t){ return '<span class="update-tag">'+t+'</span>'; }).join('');
+      var info = document.createElement('div');
+      info.className = 'update-row-info';
+      info.innerHTML =
+        '<div class="update-row-title">'+(u.version ? u.version+' — ' : '')+u.title+'</div>'+
+        '<div class="update-row-meta">'+date+(tagHtml ? ' &nbsp;'+tagHtml : '')+'</div>'+
+        '<div class="update-row-body">'+u.body.slice(0,140)+(u.body.length>140?'…':'')+'</div>';
+      var btn = document.createElement('button');
+      btn.className = 'danger';
+      btn.textContent = 'Delete';
+      btn.style.cssText = 'flex-shrink:0;font-size:11px;padding:5px 12px';
+      btn.addEventListener('click', function(){ deleteUpdate(u.id); });
+      row.appendChild(info);
+      row.appendChild(btn);
+      cont.appendChild(row);
     });
-  })
-  .catch(function(){ cont.innerHTML='<p style="font-size:12px;color:#e05555">Failed to load.</p>'; });
+  }).catch(function(){ cont.innerHTML='<p style="font-size:12px;color:#e05555">Failed to load.</p>'; });
 }
 
 function deleteUpdate(id){
   if(!confirm('Delete this update?')) return;
-  fetch('/api/updates',{
-    method:'DELETE',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({password:pw, id})
-  })
-  .then(function(r){return r.json();})
-  .then(function(d){
+  del('/api/updates', {password:pw, id:id}).then(function(d){
     if(d.ok) loadExistingUpdates();
-    else alert('Error: '+d.error);
+    else alert('Error: '+(d.error||'unknown'));
   });
 }
+
+qs('publishBtn').addEventListener('click', postUpdate);
+qs('refreshUpdatesBtn').addEventListener('click', loadExistingUpdates);
 </script>
 </body>
 </html>
