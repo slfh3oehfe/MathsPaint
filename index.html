@@ -201,7 +201,7 @@ a,button{cursor:none}
 </style>
 </head>
 <body>
-<div id="cursor" style="position:fixed;width:8px;height:8px;background:#fff;border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform .1s,opacity .2s;opacity:0"></div>
+
 
 
 <a href="#" onclick="event.preventDefault();window.location.href='/admin.html'" style="position:fixed;bottom:20px;right:20px;z-index:100;display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;color:rgba(255,255,255,.18);text-decoration:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:999px;padding:6px 14px;transition:all .2s" onmouseover="this.style.color='rgba(255,255,255,.6)';this.style.borderColor='rgba(255,255,255,.15)';this.style.background='rgba(255,255,255,.07)'" onmouseout="this.style.color='rgba(255,255,255,.18)';this.style.borderColor='rgba(255,255,255,.07)';this.style.background='rgba(255,255,255,.04)'">
@@ -577,102 +577,26 @@ window.addEventListener('popstate',e=>{ const page=e.state?.page||'home'; naviga
   draw();
 })();
 </script>
-<script>
-(function(){
-  var dot = document.getElementById('cursor');
-  var mx=0,my=0,rx=0,ry=0;
 
-  document.addEventListener('mousemove', function(e){
-    mx = e.clientX; my = e.clientY;
-    dot.style.left = mx+'px'; dot.style.top = my+'px';
-    dot.style.opacity = '1';
-    ring.style.opacity = '1';
-  });
-
-  document.addEventListener('mouseleave', function(){
-    dot.style.opacity='0'; ring.style.opacity='0';
-  });
-
-  // Smooth ring follow
-  function lerp(a,b,t){ return a+(b-a)*t; }
-  function loop(){
-    rx = lerp(rx, mx, 0.12);
-    requestAnimationFrame(loop);
-  }
-  loop();
-
-  // Scale on hover over clickable elements
-  document.querySelectorAll('a,button').forEach(function(el){
-    el.addEventListener('mouseenter', function(){
-      dot.style.transform='translate(-50%,-50%) scale(0)';
-      ring.style.width='48px'; ring.style.height='48px';
-      ring.style.borderColor='rgba(255,255,255,.6)';
-    });
-    el.addEventListener('mouseleave', function(){
-      dot.style.transform='translate(-50%,-50%) scale(1)';
-      ring.style.width='32px'; ring.style.height='32px';
-      ring.style.borderColor='rgba(255,255,255,.3)';
-    });
-  });
-
-  // Scale on click
-  document.addEventListener('mousedown', function(){
-    dot.style.transform='translate(-50%,-50%) scale(2)';
-    ring.style.transform='translate(-50%,-50%) scale(0.8)';
-  });
-  document.addEventListener('mouseup', function(){
-    dot.style.transform='translate(-50%,-50%) scale(1)';
-    ring.style.transform='translate(-50%,-50%)';
-  });
-})();
-</script>
 <script>
 (function(){
   var dot = document.getElementById('cursorDot');
+  if(!dot) return;
   var mx = 0, my = 0;
+  var clickables = 'a,button,.icon-btn,.btn,.docs-back,.docs-card,.feat-card,.pic-card';
 
   document.addEventListener('mousemove', function(e){
     mx = e.clientX; my = e.clientY;
-    dot.style.left = mx+'px';
-    dot.style.top = my+'px';
+    dot.style.left = mx + 'px';
+    dot.style.top  = my + 'px';
+    dot.style.opacity = '1';
   });
-
-  // Ring follows with lerp for smooth trailing
-  function lerp(a,b,t){ return a+(b-a)*t; }
-  function animate(){
-    rx = lerp(rx, mx, 0.12);
-    requestAnimationFrame(animate);
-  }
-  animate();
-
-  // Hover effect on clickable elements
-  var clickables = 'a,button,.icon-btn,.btn,.docs-back,.docs-card,.feat-card,.pic-card';
-  document.addEventListener('mouseover', function(e){
-    if(e.target.closest(clickables)){
-      dot.classList.add('hover');
-    }
-  });
-  document.addEventListener('mouseout', function(e){
-    if(e.target.closest(clickables)){
-      dot.classList.remove('hover');
-    }
-  });
-
-  // Click effect
-  document.addEventListener('mousedown', function(){
-    dot.classList.add('click');
-  });
-  document.addEventListener('mouseup', function(){
-    dot.classList.remove('click');
-  });
-
-  // Hide when mouse leaves window
-  document.addEventListener('mouseleave', function(){
-    dot.style.opacity='0'; ring.style.opacity='0';
-  });
-  document.addEventListener('mouseenter', function(){
-    dot.style.opacity='1'; ring.style.opacity='1';
-  });
+  document.addEventListener('mouseleave', function(){ dot.style.opacity = '0'; });
+  document.addEventListener('mouseenter', function(){ dot.style.opacity = '1'; });
+  document.addEventListener('mouseover',  function(e){ if(e.target.closest(clickables)) dot.classList.add('hover'); });
+  document.addEventListener('mouseout',   function(e){ if(e.target.closest(clickables)) dot.classList.remove('hover'); });
+  document.addEventListener('mousedown',  function(){ dot.classList.add('click'); });
+  document.addEventListener('mouseup',    function(){ dot.classList.remove('click'); });
 })();
 </script>
 </body>
